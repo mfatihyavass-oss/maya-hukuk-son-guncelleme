@@ -1,0 +1,64 @@
+.mh-sg-block {
+    --mh-sg-text-color: #FFFFFF;
+    --mh-sg-gradient-start: #0B1530;
+    --mh-sg-gradient-end: #122A57;
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    padding: 20px 22px;
+    color: var(--mh-sg-text-color);
+    background: linear-gradient(135deg, var(--mh-sg-gradient-start) 0%, var(--mh-sg-gradient-end) 100%);
+    box-shadow: 0 14px 32px rgba(4, 10, 24, 0.35);
+    isolation: isolate;
+}
+
+.mh-sg-block::before,
+.mh-sg-block::after {
+    content: "";
+    position: absolute;
+    inset: auto;
+    border-radius: 999px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.mh-sg-block::before {
+    width: 220px;
+    height: 220px;
+    right: -85px;
+    top: -105px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+.mh-sg-block::after {
+    width: 180px;
+    height: 180px;
+    left: -65px;
+    bottom: -95px;
+    background: radial-gradient(circle, rgba(89, 151, 255, 0.24) 0%, rgba(89, 151, 255, 0) 74%);
+}
+
+.mh-sg-date,
+.mh-sg-author {
+    margin: 0;
+    line-height: 1.35;
+    color: inherit;
+}
+
+.mh-sg-date {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.mh-sg-author {
+    margin-top: 7px;
+    font-size: 0.96rem;
+    font-weight: 500;
+    opacity: 0.95;
+}
+
+.editor-styles-wrapper .mh-sg-block,
+.block-editor-block-list__layout .mh-sg-block {
+    min-height: 88px;
+}

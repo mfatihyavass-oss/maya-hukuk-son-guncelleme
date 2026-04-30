@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "maya-hukuk/son-guncelleme",
+  "version": "1.0.0",
+  "title": "Maya Hukuk - Son Güncelleme",
+  "category": "widgets",
+  "icon": "update",
+  "description": "Bugunun tarihini ve varsayilan yazari gosteren dinamik blok.",
+  "keywords": ["son", "guncelleme", "maya hukuk"],
+  "supports": {
+    "html": false,
+    "multiple": true,
+    "reusable": true
+  },
+  "textdomain": "maya-hukuk-son-guncelleme",
+  "editorScript": "mh-sg-editor-script",
+  "style": "mh-sg-style"
+}
