@@ -1,10 +1,10 @@
 # Maya Hukuk Son Guncelleme Bloku
 
-WordPress Gutenberg editoru icin "Son Guncelleme" blogu ekler. Blok, her goruntulemede guncel tarihi dinamik olarak yazar ve ayarlar ekranindan belirlenen yazar adini/renklerini kullanir.
+WordPress Gutenberg editoru icin "Son Guncelleme" blogu ekler. Blok, yazinin son duzenlenme tarihini gosterir ve ayarlar ekranindan belirlenen yazar adini/renklerini kullanir.
 
 ## Ozellikler
 
-- Dinamik tarih: `Son Guncelleme DD.MM.YYYY`
+- Yazi son kaydedildiginde/duzenlendiginde guncellenen tarih: `Son Guncelleme DD.MM.YYYY`
 - Global yazar adi ayari
 - Metin rengi ayari
 - Arka plan gradyan baslangic ve bitis rengi ayari
@@ -37,6 +37,7 @@ Alternatif olarak kokteki `maya-hukuk-son-guncelleme.zip` dosyasini WordPress uz
 
 - Blok adi: `maya-hukuk/son-guncelleme`
 - Render sekli: PHP `render_callback` ile sunucu tarafli dinamik cikti
+- Tarih kaynagi: ilgili yazi/sayfanin `modified date` bilgisi
 - Varsayilan yazar: `Av. Arb. M. Fatih Yavas`
 
 ## Lisans

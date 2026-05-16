@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 - 2026-05-16
+
+- "Son Guncelleme" tarihi, gunluk degisim yerine yazi/sayfanin son duzenlenme tarihinden okunacak sekilde guncellendi.
+- Dinamik render tarafinda post baglamindan `postId` kullanimi eklendi.
+- Blok metadata surumu `1.1.0` yapildi.
+
 ## 1.0.1 - 2026-05-16
 
 - GitHub `README.md` eklendi.

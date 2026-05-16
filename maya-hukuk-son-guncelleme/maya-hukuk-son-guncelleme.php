@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Guncelleme Bloku
  * Description:       Gutenberg icin dinamik Son Guncelleme blogu ve global ayarlar.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            Maya Hukuk
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -86,7 +86,7 @@ final class Maya_Hukuk_Son_Guncelleme {
         $gradient_start = $this->get_gradient_start_color();
         $gradient_end = $this->get_gradient_end_color();
 
-        $date_text = wp_date('d.m.Y');
+        $date_text = $this->get_last_updated_date($block);
 
         $styles = sprintf(
             '--mh-sg-text-color: %s; --mh-sg-gradient-start: %s; --mh-sg-gradient-end: %s;',
@@ -259,6 +259,28 @@ final class Maya_Hukuk_Son_Guncelleme {
 
     private function get_gradient_end_color() {
         return $this->sanitize_gradient_end_color(get_option(self::OPTION_GRADIENT_END, '#122A57'));
+    }
+
+    private function get_last_updated_date($block = null) {
+        $post_id = 0;
+
+        if ($block instanceof WP_Block && isset($block->context['postId'])) {
+            $post_id = absint($block->context['postId']);
+        }
+
+        if (!$post_id) {
+            $post_id = get_the_ID();
+        }
+
+        if ($post_id) {
+            $modified_date = get_the_modified_date('d.m.Y', $post_id);
+
+            if (!empty($modified_date)) {
+                return $modified_date;
+            }
+        }
+
+        return wp_date('d.m.Y');
     }
 }
 
