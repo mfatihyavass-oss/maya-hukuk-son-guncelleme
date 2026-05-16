@@ -4,6 +4,8 @@
  * Description:       Gutenberg icin dinamik Son Guncelleme blogu ve global ayarlar.
  * Version:           1.0.0
  * Author:            Maya Hukuk
+ * License:           GPL-2.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       maya-hukuk-son-guncelleme
  */
 
