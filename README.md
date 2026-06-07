@@ -64,7 +64,7 @@ Alternatif olarak kokteki `maya-hukuk-son-guncelleme.zip` dosyasini WordPress uz
 - Blok adi: `maya-hukuk/son-guncelleme`
 - Render sekli: PHP `render_callback` ile sunucu tarafli dinamik cikti
 - Tarih kaynagi: ilgili yazi/sayfanin `modified date` bilgisi; editor onizlemesi de ayni kaynagi izler
-- Yayin tarihi esleme: yalnizca `maya-hukuk/son-guncelleme` blogu bulunan yayinlanmis icerikler kaydedilirken calisir
+- Yayin tarihi esleme: `maya-hukuk/son-guncelleme` blogu bulunan yayinlanmis icerikler kaydedilirken veya Baslangic ekranindaki `Tarihi esitle` dugmesiyle calisir
 - Baslangic ekrani kontrolu: AJAX ile manuel calisir, yetki ve nonce kontrolu yapar
 - Varsayilan yazar: `Av. Arb. M. Fatih Yavas`
 
