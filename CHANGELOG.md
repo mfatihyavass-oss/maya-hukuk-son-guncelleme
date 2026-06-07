@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1 - 2026-06-07
+
+- `Guncel olmayan yazilar` raporu, Son Guncelleme blogu olsun olmasin tum yayinlanmis yazilari/sayfalari kontrol edecek sekilde genisletildi.
+- Rapor son guncelleme tarihi en eski olan icerikleri en ustte gostermeye devam eder.
+
 ## 1.5.0 - 2026-06-07
 
 - Tarih uyumsuzlugu raporu saat farkini yok sayacak sekilde guncellendi; ayni gun icindeki saat farklari artik rapora girmez.

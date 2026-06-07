@@ -4,7 +4,7 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,7 +46,7 @@ Evet. WordPress Baslangic ekranindaki `Son Guncelleme Tarih Kontrolu` kutusunda 
 
 = Guncel olmayan yazilari nasil gorurum? =
 
-Baslangic ekranindaki `Guncel olmayanlari kontrol et` dugmesi Son Guncelleme blogu bulunan yayinlanmis icerikleri son guncelleme tarihi en eski olandan baslayarak listeler. Bu raporda tarih esitleme dugmesi yoktur; `Yaziyi guncelle` dugmesi ilgili editoru acar.
+Baslangic ekranindaki `Guncel olmayanlari kontrol et` dugmesi Son Guncelleme blogu olsun olmasin tum yayinlanmis yazilari/sayfalari son guncelleme tarihi en eski olandan baslayarak listeler. Bu raporda tarih esitleme dugmesi yoktur; `Yaziyi guncelle` dugmesi ilgili editoru acar.
 
 = Raporlar temizlenebilir mi? =
 
@@ -65,6 +65,10 @@ Bu surumde renkler globaldir. Ayarlar ekraninda yaptiginiz degisiklik tum blokla
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 1.5.1 =
+
+- Guncel olmayan yazilar raporu artik Son Guncelleme blogu olsun olmasin tum yayinlanmis yazilari/sayfalari listeler.
 
 = 1.5.0 =
 

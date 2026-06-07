@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Guncelleme Bloku
  * Description:       Gutenberg icin dinamik Son Guncelleme blogu ve global ayarlar.
- * Version:           1.5.0
+ * Version:           1.5.1
  * Author:            Maya Hukuk
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -230,7 +230,7 @@ final class Maya_Hukuk_Son_Guncelleme {
 
             <div class="mh-sg-dashboard-report" id="mh-sg-outdated-report">
                 <h3>Güncel olmayan yazılar raporu</h3>
-                <p>Son Güncelleme bloğu bulunan yayınlanmış içerikleri son güncelleme tarihi en eski olandan başlayarak listeler.</p>
+                <p>Yayınlanmış tüm yazı/sayfaları son güncelleme tarihi en eski olandan başlayarak listeler.</p>
                 <p>
                     <button type="button" class="button button-primary" id="mh-sg-check-outdated-posts">Güncel olmayanları kontrol et</button>
                     <button type="button" class="button" id="mh-sg-clear-outdated-posts">Raporu sil</button>
@@ -499,7 +499,7 @@ final class Maya_Hukuk_Son_Guncelleme {
 
             $post = get_post($post_id);
 
-            if (!$post instanceof WP_Post || !has_block(self::BLOCK_NAME, $post->post_content)) {
+            if (!$post instanceof WP_Post) {
                 continue;
             }
 

@@ -2,7 +2,7 @@
 
 WordPress Gutenberg editoru icin "Son Guncelleme" blogu ekler. Blok, yazinin son duzenlenme tarihini gosterir ve ayarlar ekranindan belirlenen yazar adini/renklerini kullanir.
 
-Guncel surum: `1.5.0`
+Guncel surum: `1.5.1`
 
 ## Ozellikler
 
@@ -12,7 +12,7 @@ Guncel surum: `1.5.0`
 - Tarih uyumsuzlugu raporunda yil farklarini en ustte, ay farklarini ortada, gun farklarini en altta gosterme
 - Tarih ayni olup sadece saat farkliysa kaydi uyumsuzluk raporuna almama
 - Uyumsuz kayitlar icin editor linki ve editoru acmadan tarih esitleme dugmesi
-- Son guncelleme tarihi en eski olan bloklu yazilar icin ayri rapor ve editor linki
+- Son guncelleme tarihi en eski olan tum yayinlanmis yazilar/sayfalar icin ayri rapor ve editor linki
 - Her iki Baslangic raporu icin raporu silme dugmesi
 - Global yazar adi ayari
 - Metin rengi ayari
@@ -55,7 +55,7 @@ Alternatif olarak kokteki `maya-hukuk-son-guncelleme.zip` dosyasini WordPress uz
 - Uyumsuzluk kontrolu saat farkini yok sayar; ayni gun icindeki saat farklari rapora girmez.
 - Uyumsuzluk raporu yil farki, ay farki ve gun farki olarak gruplanir.
 - Listedeki her kayit editor linkiyle acilabilir veya `Tarihi esitle` dugmesiyle editor acilmadan duzeltilebilir.
-- `Guncel olmayanlari kontrol et` dugmesi Son Guncelleme blogu bulunan yayinlanmis icerikleri son guncelleme tarihi en eski olandan baslayarak listeler.
+- `Guncel olmayanlari kontrol et` dugmesi Son Guncelleme blogu olsun olmasin tum yayinlanmis yazilari/sayfalari son guncelleme tarihi en eski olandan baslayarak listeler.
 - Guncel olmayan yazilar raporunda tarih esitleme yoktur; `Yaziyi guncelle` dugmesi ilgili editoru acar.
 - Her rapor kendi `Raporu sil` dugmesiyle ekrandan temizlenebilir.
 
