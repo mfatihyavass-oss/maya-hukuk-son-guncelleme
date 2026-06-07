@@ -2,7 +2,7 @@
 
 WordPress Gutenberg editoru icin "Son Guncelleme" blogu ekler. Blok, yazinin son duzenlenme tarihini gosterir ve ayarlar ekranindan belirlenen yazar adini/renklerini kullanir.
 
-Guncel surum: `1.5.1`
+Guncel surum: `1.5.2`
 
 ## Ozellikler
 
@@ -43,6 +43,12 @@ maya-hukuk-son-guncelleme/
 5. Yazida/sayfada blok eklerken **Maya Hukuk - Son Guncelleme** blogunu sec.
 
 Alternatif olarak kokteki `maya-hukuk-son-guncelleme.zip` dosyasini WordPress uzerinden yukleyebilirsin.
+
+## Uyumluluk
+
+- WordPress: `6.3+`; `7.0` ile uyumluluk bilgisi guncellendi.
+- PHP: minimum `7.4`; guncel destekli PHP `8.2`, `8.3`, `8.4` ve `8.5` surumleriyle uyumlu sozdizimi kullanir.
+- WordPress 7.0 icin resmi minimum PHP gereksinimi `7.4`; WordPress.org guncel kurulumlar icin PHP `8.3+` onerir.
 
 ## Tarih Davranisi
 

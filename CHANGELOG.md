@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.2 - 2026-06-07
+
+- WordPress uyumluluk bilgisi 7.0 icin guncellendi.
+- README'ye guncel destekli PHP surumleri ve WordPress 7.0 PHP gereksinimi notu eklendi.
+
 ## 1.5.1 - 2026-06-07
 
 - `Guncel olmayan yazilar` raporu, Son Guncelleme blogu olsun olmasin tum yayinlanmis yazilari/sayfalari kontrol edecek sekilde genisletildi.
