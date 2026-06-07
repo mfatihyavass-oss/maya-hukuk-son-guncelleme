@@ -1,0 +1,40 @@
+.mh-sg-dashboard-audit p {
+    margin-top: 0;
+}
+
+.mh-sg-date-audit-message {
+    margin: 10px 0;
+}
+
+.mh-sg-date-audit-message.is-success {
+    color: #008a20;
+}
+
+.mh-sg-date-audit-message.is-warning {
+    color: #996800;
+}
+
+.mh-sg-date-audit-message.is-error {
+    color: #b32d2e;
+}
+
+.mh-sg-date-audit-message.is-info {
+    color: #2271b1;
+}
+
+.mh-sg-date-audit-results {
+    overflow-x: auto;
+}
+
+.mh-sg-date-audit-table {
+    margin-top: 10px;
+}
+
+.mh-sg-date-audit-table th,
+.mh-sg-date-audit-table td {
+    vertical-align: middle;
+}
+
+.mh-sg-date-audit-title {
+    font-weight: 600;
+}

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 - 2026-06-07
+
+- WordPress Baslangic ekranina manuel `Son Guncelleme Tarih Kontrolu` kutusu eklendi.
+- `Kontrol et` dugmesi, yalnizca Son Guncelleme blogu bulunan ve yayin tarihi son duzenlenme tarihiyle uyumsuz olan yayinlanmis yazilari/sayfalari listeler.
+- Her uyumsuz kayit icin editor linki ve editor acilmadan yayin tarihini son duzenlenme tarihine esitleyen dugme eklendi.
+
 ## 1.3.1 - 2026-06-07
 
 - Yayin tarihi eslemesi, kayittan sonra dogrudan veritabani guncellemesi yapmak yerine WordPress'in kayit verisi filtresinde uygulanacak sekilde duzeltildi.

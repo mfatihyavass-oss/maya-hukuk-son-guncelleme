@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Guncelleme Bloku
  * Description:       Gutenberg icin dinamik Son Guncelleme blogu ve global ayarlar.
- * Version:           1.3.1
+ * Version:           1.4.0
  * Author:            Maya Hukuk
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -15,6 +15,9 @@ if (!defined('ABSPATH')) {
 
 final class Maya_Hukuk_Son_Guncelleme {
     const BLOCK_NAME = 'maya-hukuk/son-guncelleme';
+    const DASHBOARD_NONCE_ACTION = 'mh_sg_dashboard_date_audit';
+    const AJAX_CHECK_ACTION = 'mh_sg_check_date_mismatches';
+    const AJAX_SYNC_ACTION = 'mh_sg_sync_publish_date';
     const OPTION_AUTHOR = 'mh_sg_author_name';
     const OPTION_TEXT_COLOR = 'mh_sg_text_color';
     const OPTION_GRADIENT_START = 'mh_sg_gradient_start';
@@ -26,6 +29,10 @@ final class Maya_Hukuk_Son_Guncelleme {
         add_action('init', array($this, 'register_block'));
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_menu', array($this, 'register_settings_page'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_dashboard_assets'));
+        add_action('wp_dashboard_setup', array($this, 'register_dashboard_widget'));
+        add_action('wp_ajax_' . self::AJAX_CHECK_ACTION, array($this, 'ajax_check_date_mismatches'));
+        add_action('wp_ajax_' . self::AJAX_SYNC_ACTION, array($this, 'ajax_sync_publish_date'));
         add_filter('wp_insert_post_data', array($this, 'sync_publish_date_before_save'), 20, 4);
     }
 
@@ -143,6 +150,77 @@ final class Maya_Hukuk_Son_Guncelleme {
         );
     }
 
+    public function enqueue_dashboard_assets($hook_suffix) {
+        if ($hook_suffix !== 'index.php' || !current_user_can('edit_posts')) {
+            return;
+        }
+
+        $dashboard_script_handle = 'mh-sg-dashboard-script';
+        $dashboard_style_handle = 'mh-sg-dashboard-style';
+
+        wp_register_script(
+            $dashboard_script_handle,
+            plugins_url('assets/dashboard.js', __FILE__),
+            array(),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/dashboard.js'),
+            true
+        );
+
+        wp_register_style(
+            $dashboard_style_handle,
+            plugins_url('assets/dashboard.css', __FILE__),
+            array(),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/dashboard.css')
+        );
+
+        wp_localize_script($dashboard_script_handle, 'mhSgDashboardAudit', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce(self::DASHBOARD_NONCE_ACTION),
+            'checkAction' => self::AJAX_CHECK_ACTION,
+            'syncAction' => self::AJAX_SYNC_ACTION,
+            'messages' => array(
+                'checking' => 'Kontrol ediliyor...',
+                'syncing' => 'Eşitleniyor...',
+                'empty' => 'Uyumsuz yayın tarihi bulunan yazı/sayfa yok.',
+                'error' => 'İşlem tamamlanamadı. Lütfen tekrar deneyin.',
+                'synced' => 'Yayın tarihi eşitlendi.',
+            ),
+        ));
+
+        wp_enqueue_script($dashboard_script_handle);
+        wp_enqueue_style($dashboard_style_handle);
+    }
+
+    public function register_dashboard_widget() {
+        if (!current_user_can('edit_posts')) {
+            return;
+        }
+
+        wp_add_dashboard_widget(
+            'mh_sg_date_audit_dashboard_widget',
+            'Son Güncelleme Tarih Kontrolü',
+            array($this, 'render_dashboard_widget')
+        );
+    }
+
+    public function render_dashboard_widget() {
+        if (!current_user_can('edit_posts')) {
+            return;
+        }
+        ?>
+        <div class="mh-sg-dashboard-audit">
+            <p>Bu kontrol, Son Güncelleme bloğu bulunan yayınlanmış yazı/sayfalarda yayın tarihi ile son güncelleme tarihi uyuşmayan kayıtları listeler.</p>
+            <p>Kontrol ve eşitleme otomatik çalışmaz; işlem yalnızca butona bastığınızda yapılır.</p>
+            <p>
+                <button type="button" class="button button-primary" id="mh-sg-check-date-mismatches">Kontrol et</button>
+                <span class="spinner" id="mh-sg-date-audit-spinner"></span>
+            </p>
+            <div id="mh-sg-date-audit-message" class="mh-sg-date-audit-message" aria-live="polite"></div>
+            <div id="mh-sg-date-audit-results" class="mh-sg-date-audit-results"></div>
+        </div>
+        <?php
+    }
+
     public function render_settings_page() {
         if (!current_user_can('manage_options')) {
             return;
@@ -250,7 +328,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             return $data;
         }
 
-        if (empty($data['post_modified']) || empty($data['post_modified_gmt'])) {
+        if (!$this->is_valid_mysql_datetime($data['post_modified']) || !$this->is_valid_mysql_datetime($data['post_modified_gmt'])) {
             return $data;
         }
 
@@ -258,6 +336,38 @@ final class Maya_Hukuk_Son_Guncelleme {
         $data['post_date_gmt'] = $data['post_modified_gmt'];
 
         return $data;
+    }
+
+    public function ajax_check_date_mismatches() {
+        $this->verify_dashboard_ajax_request();
+
+        $items = $this->get_publish_date_mismatches();
+
+        wp_send_json_success(array(
+            'items' => $items,
+            'count' => count($items),
+        ));
+    }
+
+    public function ajax_sync_publish_date() {
+        $this->verify_dashboard_ajax_request();
+
+        $post_id = isset($_POST['postId']) ? absint(wp_unslash($_POST['postId'])) : 0;
+
+        if (!$post_id || !current_user_can('edit_post', $post_id)) {
+            wp_send_json_error(array('message' => 'Bu yazı için yetkiniz yok.'), 403);
+        }
+
+        $result = $this->sync_existing_publish_date($post_id);
+
+        if (is_wp_error($result)) {
+            wp_send_json_error(array('message' => $result->get_error_message()), 400);
+        }
+
+        wp_send_json_success(array(
+            'message' => 'Yayın tarihi eşitlendi.',
+            'item' => $this->build_date_mismatch_item($result),
+        ));
     }
 
     private function sanitize_color_with_default($color, $default_color) {
@@ -284,6 +394,138 @@ final class Maya_Hukuk_Son_Guncelleme {
 
     private function get_gradient_end_color() {
         return $this->sanitize_gradient_end_color(get_option(self::OPTION_GRADIENT_END, '#122A57'));
+    }
+
+    private function verify_dashboard_ajax_request() {
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error(array('message' => 'Bu işlem için yetkiniz yok.'), 403);
+        }
+
+        check_ajax_referer(self::DASHBOARD_NONCE_ACTION, 'nonce');
+    }
+
+    private function get_publish_date_mismatches() {
+        $query = new WP_Query(array(
+            'post_type' => $this->get_auditable_post_types(),
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+            'orderby' => 'modified',
+            'order' => 'DESC',
+            'no_found_rows' => true,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
+        ));
+
+        $items = array();
+
+        foreach ($query->posts as $post_id) {
+            if (!current_user_can('edit_post', $post_id)) {
+                continue;
+            }
+
+            $post = get_post($post_id);
+
+            if (!$post instanceof WP_Post || !has_block(self::BLOCK_NAME, $post->post_content)) {
+                continue;
+            }
+
+            if ($this->publish_date_matches_modified_date($post)) {
+                continue;
+            }
+
+            $items[] = $this->build_date_mismatch_item($post);
+        }
+
+        return $items;
+    }
+
+    private function get_auditable_post_types() {
+        $post_types = get_post_types(array(
+            'public' => true,
+            'show_ui' => true,
+        ), 'names');
+
+        return array_values(array_diff($post_types, array('attachment')));
+    }
+
+    private function publish_date_matches_modified_date($post) {
+        return $post instanceof WP_Post
+            && $post->post_date === $post->post_modified
+            && $post->post_date_gmt === $post->post_modified_gmt;
+    }
+
+    private function build_date_mismatch_item($post) {
+        $post_type_object = get_post_type_object($post->post_type);
+        $title = get_the_title($post);
+
+        if ($title === '') {
+            $title = sprintf('#%d', $post->ID);
+        }
+
+        return array(
+            'id' => $post->ID,
+            'title' => wp_strip_all_tags($title),
+            'postType' => $post_type_object && !empty($post_type_object->labels->singular_name) ? $post_type_object->labels->singular_name : $post->post_type,
+            'publishDate' => $this->format_admin_datetime($post->post_date),
+            'modifiedDate' => $this->format_admin_datetime($post->post_modified),
+            'editUrl' => get_edit_post_link($post->ID, 'raw'),
+            'canSync' => current_user_can('edit_post', $post->ID),
+            'isSynced' => $this->publish_date_matches_modified_date($post),
+        );
+    }
+
+    private function format_admin_datetime($mysql_date) {
+        if (!$this->is_valid_mysql_datetime($mysql_date)) {
+            return '-';
+        }
+
+        return mysql2date(get_option('date_format') . ' ' . get_option('time_format'), $mysql_date);
+    }
+
+    private function is_valid_mysql_datetime($mysql_date) {
+        return !empty($mysql_date) && $mysql_date !== '0000-00-00 00:00:00';
+    }
+
+    private function sync_existing_publish_date($post_id) {
+        $post = get_post($post_id);
+
+        if (!$post instanceof WP_Post) {
+            return new WP_Error('mh_sg_missing_post', 'Yazı bulunamadı.');
+        }
+
+        if ($post->post_status !== 'publish') {
+            return new WP_Error('mh_sg_invalid_status', 'Yalnızca yayınlanmış yazı/sayfalar eşitlenebilir.');
+        }
+
+        if (!has_block(self::BLOCK_NAME, $post->post_content)) {
+            return new WP_Error('mh_sg_missing_block', 'Bu içerikte Son Güncelleme bloğu bulunamadı.');
+        }
+
+        if (!$this->is_valid_mysql_datetime($post->post_modified) || !$this->is_valid_mysql_datetime($post->post_modified_gmt)) {
+            return new WP_Error('mh_sg_missing_modified_date', 'Son güncelleme tarihi okunamadı.');
+        }
+
+        global $wpdb;
+
+        $updated = $wpdb->update(
+            $wpdb->posts,
+            array(
+                'post_date' => $post->post_modified,
+                'post_date_gmt' => $post->post_modified_gmt,
+            ),
+            array('ID' => $post_id),
+            array('%s', '%s'),
+            array('%d')
+        );
+
+        if ($updated === false) {
+            return new WP_Error('mh_sg_sync_failed', 'Yayın tarihi eşitlenemedi.');
+        }
+
+        clean_post_cache($post_id);
+
+        return get_post($post_id);
     }
 
     private function get_last_updated_date($block = null) {

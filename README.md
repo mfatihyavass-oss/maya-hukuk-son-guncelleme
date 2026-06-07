@@ -2,12 +2,14 @@
 
 WordPress Gutenberg editoru icin "Son Guncelleme" blogu ekler. Blok, yazinin son duzenlenme tarihini gosterir ve ayarlar ekranindan belirlenen yazar adini/renklerini kullanir.
 
-Guncel surum: `1.3.1`
+Guncel surum: `1.4.0`
 
 ## Ozellikler
 
 - Yazi son kaydedildiginde/duzenlendiginde guncellenen tarih: `Son Guncelleme DD.MM.YYYY`
 - Blok ekli yayinlanmis iceriklerde WordPress yayin tarihini son duzenlenme tarihine otomatik esleme
+- WordPress Baslangic ekraninda manuel tarih uyumsuzlugu kontrolu
+- Uyumsuz kayitlar icin editor linki ve editoru acmadan tarih esitleme dugmesi
 - Global yazar adi ayari
 - Metin rengi ayari
 - Arka plan gradyan baslangic ve bitis rengi ayari
@@ -43,6 +45,8 @@ Alternatif olarak kokteki `maya-hukuk-son-guncelleme.zip` dosyasini WordPress uz
 - Bu blok bulunan yayinlanmis bir yazi/sayfa kaydedildiginde WordPress yayin tarihi de son duzenlenme tarihine eslenir.
 - Daha once blok eklenmis eski yazilar, tekrar kaydedilmedigi surece otomatik degismez.
 - Taslak, revizyon, otomatik kayit ve zamanlanmis iceriklerde yayin tarihi eslemesi yapilmaz.
+- Baslangic ekranindaki kontrol kutusu otomatik calismaz; `Kontrol et` dugmesine basildiginda yalnizca uyumsuz kayitlari listeler.
+- Listedeki her kayit editor linkiyle acilabilir veya `Tarihi esitle` dugmesiyle editor acilmadan duzeltilebilir.
 
 ## Teknik Notlar
 
@@ -50,6 +54,7 @@ Alternatif olarak kokteki `maya-hukuk-son-guncelleme.zip` dosyasini WordPress uz
 - Render sekli: PHP `render_callback` ile sunucu tarafli dinamik cikti
 - Tarih kaynagi: ilgili yazi/sayfanin `modified date` bilgisi; editor onizlemesi de ayni kaynagi izler
 - Yayin tarihi esleme: yalnizca `maya-hukuk/son-guncelleme` blogu bulunan yayinlanmis icerikler kaydedilirken calisir
+- Baslangic ekrani kontrolu: AJAX ile manuel calisir, yetki ve nonce kontrolu yapar
 - Varsayilan yazar: `Av. Arb. M. Fatih Yavas`
 
 ## Lisans

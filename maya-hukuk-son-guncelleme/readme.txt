@@ -4,7 +4,7 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,10 @@ Hayir. Tarih, sadece icerik editorunde kaydedildiginde/guncellendiginde degisir.
 
 Evet. Bu blok ekli olan yayinlanmis yazi/sayfa kaydedildiginde yayin tarihi, son duzenlenme tarihine eslenir.
 
+= Eski yazilardaki uyumsuz tarihleri toplu gormek mumkun mu? =
+
+Evet. WordPress Baslangic ekranindaki `Son Guncelleme Tarih Kontrolu` kutusunda `Kontrol et` dugmesine basin. Eklenti yalnizca Son Guncelleme blogu bulunan ve yayin tarihi son guncelleme tarihiyle uyumsuz olan yayinlanmis yazilari/sayfalari listeler. Her kayit editor linkiyle acilabilir veya listedeki dugmeyle editor acilmadan eslenebilir.
+
 = Tarih manuel degistirilebilir mi? =
 
 Bu surumde blokta manuel tarih alani yoktur. Tarih, yazi/sayfanin son duzenlenme tarihinden gelir.
@@ -53,6 +57,12 @@ Bu surumde renkler globaldir. Ayarlar ekraninda yaptiginiz degisiklik tum blokla
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 1.4.0 =
+
+- WordPress Baslangic ekranina manuel tarih kontrol kutusu eklendi.
+- Kontrol sonucu yalnizca Son Guncelleme blogu bulunan ve yayin tarihi son duzenlenme tarihiyle uyumsuz olan yayinlanmis icerikleri listeler.
+- Her kayit icin editor linki ve editoru acmadan yayin tarihini esitleme dugmesi eklendi.
 
 = 1.3.1 =
 
