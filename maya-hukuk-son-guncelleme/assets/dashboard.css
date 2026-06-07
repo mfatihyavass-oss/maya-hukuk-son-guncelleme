@@ -2,6 +2,22 @@
     margin-top: 0;
 }
 
+.mh-sg-dashboard-report {
+    border-top: 1px solid #dcdcde;
+    margin-top: 14px;
+    padding-top: 14px;
+}
+
+.mh-sg-dashboard-report:first-of-type {
+    border-top: 0;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.mh-sg-dashboard-report h3 {
+    margin: 0 0 8px;
+}
+
 .mh-sg-date-audit-message {
     margin: 10px 0;
 }
@@ -36,5 +52,11 @@
 }
 
 .mh-sg-date-audit-title {
+    font-weight: 600;
+}
+
+.mh-sg-date-audit-table .mh-sg-date-audit-group td {
+    background: #f6f7f7;
+    color: #1d2327;
     font-weight: 600;
 }

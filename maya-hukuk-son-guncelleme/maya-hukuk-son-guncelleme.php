@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Guncelleme Bloku
  * Description:       Gutenberg icin dinamik Son Guncelleme blogu ve global ayarlar.
- * Version:           1.4.0
+ * Version:           1.5.0
  * Author:            Maya Hukuk
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -17,6 +17,7 @@ final class Maya_Hukuk_Son_Guncelleme {
     const BLOCK_NAME = 'maya-hukuk/son-guncelleme';
     const DASHBOARD_NONCE_ACTION = 'mh_sg_dashboard_date_audit';
     const AJAX_CHECK_ACTION = 'mh_sg_check_date_mismatches';
+    const AJAX_OUTDATED_ACTION = 'mh_sg_check_outdated_posts';
     const AJAX_SYNC_ACTION = 'mh_sg_sync_publish_date';
     const OPTION_AUTHOR = 'mh_sg_author_name';
     const OPTION_TEXT_COLOR = 'mh_sg_text_color';
@@ -32,6 +33,7 @@ final class Maya_Hukuk_Son_Guncelleme {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_dashboard_assets'));
         add_action('wp_dashboard_setup', array($this, 'register_dashboard_widget'));
         add_action('wp_ajax_' . self::AJAX_CHECK_ACTION, array($this, 'ajax_check_date_mismatches'));
+        add_action('wp_ajax_' . self::AJAX_OUTDATED_ACTION, array($this, 'ajax_check_outdated_posts'));
         add_action('wp_ajax_' . self::AJAX_SYNC_ACTION, array($this, 'ajax_sync_publish_date'));
         add_filter('wp_insert_post_data', array($this, 'sync_publish_date_before_save'), 20, 4);
     }
@@ -177,11 +179,13 @@ final class Maya_Hukuk_Son_Guncelleme {
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce(self::DASHBOARD_NONCE_ACTION),
             'checkAction' => self::AJAX_CHECK_ACTION,
+            'outdatedAction' => self::AJAX_OUTDATED_ACTION,
             'syncAction' => self::AJAX_SYNC_ACTION,
             'messages' => array(
                 'checking' => 'Kontrol ediliyor...',
                 'syncing' => 'Eşitleniyor...',
                 'empty' => 'Uyumsuz yayın tarihi bulunan yazı/sayfa yok.',
+                'outdatedEmpty' => 'Güncel olmayan yazı/sayfa bulunamadı.',
                 'error' => 'İşlem tamamlanamadı. Lütfen tekrar deneyin.',
                 'synced' => 'Yayın tarihi eşitlendi.',
             ),
@@ -211,12 +215,30 @@ final class Maya_Hukuk_Son_Guncelleme {
         <div class="mh-sg-dashboard-audit">
             <p>Bu kontrol, Son Güncelleme bloğu bulunan yayınlanmış yazı/sayfalarda yayın tarihi ile son güncelleme tarihi uyuşmayan kayıtları listeler.</p>
             <p>Kontrol ve eşitleme otomatik çalışmaz; işlem yalnızca butona bastığınızda yapılır.</p>
-            <p>
-                <button type="button" class="button button-primary" id="mh-sg-check-date-mismatches">Kontrol et</button>
-                <span class="spinner" id="mh-sg-date-audit-spinner"></span>
-            </p>
-            <div id="mh-sg-date-audit-message" class="mh-sg-date-audit-message" aria-live="polite"></div>
-            <div id="mh-sg-date-audit-results" class="mh-sg-date-audit-results"></div>
+
+            <div class="mh-sg-dashboard-report" id="mh-sg-date-mismatch-report">
+                <h3>Yayın tarihi uyumsuzluk raporu</h3>
+                <p>Saat farkı dikkate alınmaz; yalnızca gün, ay veya yıl farklıysa listelenir.</p>
+                <p>
+                    <button type="button" class="button button-primary" id="mh-sg-check-date-mismatches">Kontrol et</button>
+                    <button type="button" class="button" id="mh-sg-clear-date-mismatches">Raporu sil</button>
+                    <span class="spinner" id="mh-sg-date-audit-spinner"></span>
+                </p>
+                <div id="mh-sg-date-audit-message" class="mh-sg-date-audit-message" aria-live="polite"></div>
+                <div id="mh-sg-date-audit-results" class="mh-sg-date-audit-results"></div>
+            </div>
+
+            <div class="mh-sg-dashboard-report" id="mh-sg-outdated-report">
+                <h3>Güncel olmayan yazılar raporu</h3>
+                <p>Son Güncelleme bloğu bulunan yayınlanmış içerikleri son güncelleme tarihi en eski olandan başlayarak listeler.</p>
+                <p>
+                    <button type="button" class="button button-primary" id="mh-sg-check-outdated-posts">Güncel olmayanları kontrol et</button>
+                    <button type="button" class="button" id="mh-sg-clear-outdated-posts">Raporu sil</button>
+                    <span class="spinner" id="mh-sg-outdated-spinner"></span>
+                </p>
+                <div id="mh-sg-outdated-message" class="mh-sg-date-audit-message" aria-live="polite"></div>
+                <div id="mh-sg-outdated-results" class="mh-sg-date-audit-results"></div>
+            </div>
         </div>
         <?php
     }
@@ -370,6 +392,17 @@ final class Maya_Hukuk_Son_Guncelleme {
         ));
     }
 
+    public function ajax_check_outdated_posts() {
+        $this->verify_dashboard_ajax_request();
+
+        $items = $this->get_outdated_posts();
+
+        wp_send_json_success(array(
+            'items' => $items,
+            'count' => count($items),
+        ));
+    }
+
     private function sanitize_color_with_default($color, $default_color) {
         $sanitized = sanitize_hex_color($color);
 
@@ -401,7 +434,9 @@ final class Maya_Hukuk_Son_Guncelleme {
             wp_send_json_error(array('message' => 'Bu işlem için yetkiniz yok.'), 403);
         }
 
-        check_ajax_referer(self::DASHBOARD_NONCE_ACTION, 'nonce');
+        if (!check_ajax_referer(self::DASHBOARD_NONCE_ACTION, 'nonce', false)) {
+            wp_send_json_error(array('message' => 'Güvenlik doğrulaması başarısız oldu.'), 403);
+        }
     }
 
     private function get_publish_date_mismatches() {
@@ -430,11 +465,45 @@ final class Maya_Hukuk_Son_Guncelleme {
                 continue;
             }
 
-            if ($this->publish_date_matches_modified_date($post)) {
+            if (!$this->has_publish_modified_date_difference($post)) {
                 continue;
             }
 
             $items[] = $this->build_date_mismatch_item($post);
+        }
+
+        usort($items, array($this, 'sort_date_mismatch_items'));
+
+        return $items;
+    }
+
+    private function get_outdated_posts() {
+        $query = new WP_Query(array(
+            'post_type' => $this->get_auditable_post_types(),
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+            'orderby' => 'modified',
+            'order' => 'ASC',
+            'no_found_rows' => true,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
+        ));
+
+        $items = array();
+
+        foreach ($query->posts as $post_id) {
+            if (!current_user_can('edit_post', $post_id)) {
+                continue;
+            }
+
+            $post = get_post($post_id);
+
+            if (!$post instanceof WP_Post || !has_block(self::BLOCK_NAME, $post->post_content)) {
+                continue;
+            }
+
+            $items[] = $this->build_outdated_item($post);
         }
 
         return $items;
@@ -449,13 +518,103 @@ final class Maya_Hukuk_Son_Guncelleme {
         return array_values(array_diff($post_types, array('attachment')));
     }
 
-    private function publish_date_matches_modified_date($post) {
-        return $post instanceof WP_Post
-            && $post->post_date === $post->post_modified
-            && $post->post_date_gmt === $post->post_modified_gmt;
+    private function has_publish_modified_date_difference($post) {
+        return $this->get_date_difference_type($post) !== '';
+    }
+
+    private function get_date_difference_type($post) {
+        if (!$post instanceof WP_Post) {
+            return '';
+        }
+
+        $publish_parts = $this->get_mysql_date_parts($post->post_date);
+        $modified_parts = $this->get_mysql_date_parts($post->post_modified);
+
+        if (!$publish_parts || !$modified_parts) {
+            return '';
+        }
+
+        if ($publish_parts['year'] !== $modified_parts['year']) {
+            return 'year';
+        }
+
+        if ($publish_parts['month'] !== $modified_parts['month']) {
+            return 'month';
+        }
+
+        if ($publish_parts['day'] !== $modified_parts['day']) {
+            return 'day';
+        }
+
+        return '';
+    }
+
+    private function get_mysql_date_parts($mysql_date) {
+        if (!$this->is_valid_mysql_datetime($mysql_date)) {
+            return null;
+        }
+
+        return array(
+            'year' => substr($mysql_date, 0, 4),
+            'month' => substr($mysql_date, 5, 2),
+            'day' => substr($mysql_date, 8, 2),
+        );
+    }
+
+    private function get_date_difference_label($difference_type) {
+        $labels = array(
+            'year' => 'Yıl farkı',
+            'month' => 'Ay farkı',
+            'day' => 'Gün farkı',
+        );
+
+        return isset($labels[$difference_type]) ? $labels[$difference_type] : '';
+    }
+
+    private function get_date_difference_priority($difference_type) {
+        $priorities = array(
+            'year' => 1,
+            'month' => 2,
+            'day' => 3,
+        );
+
+        return isset($priorities[$difference_type]) ? $priorities[$difference_type] : 99;
+    }
+
+    private function sort_date_mismatch_items($left, $right) {
+        if ($left['differencePriority'] !== $right['differencePriority']) {
+            return $left['differencePriority'] - $right['differencePriority'];
+        }
+
+        return strcmp($right['modifiedRaw'], $left['modifiedRaw']);
     }
 
     private function build_date_mismatch_item($post) {
+        $post_type_object = get_post_type_object($post->post_type);
+        $title = get_the_title($post);
+        $difference_type = $this->get_date_difference_type($post);
+
+        if ($title === '') {
+            $title = sprintf('#%d', $post->ID);
+        }
+
+        return array(
+            'id' => $post->ID,
+            'title' => wp_strip_all_tags($title),
+            'postType' => $post_type_object && !empty($post_type_object->labels->singular_name) ? $post_type_object->labels->singular_name : $post->post_type,
+            'differenceType' => $difference_type,
+            'differenceLabel' => $this->get_date_difference_label($difference_type),
+            'differencePriority' => $this->get_date_difference_priority($difference_type),
+            'publishDate' => $this->format_admin_datetime($post->post_date),
+            'modifiedDate' => $this->format_admin_datetime($post->post_modified),
+            'modifiedRaw' => $post->post_modified,
+            'editUrl' => get_edit_post_link($post->ID, 'raw'),
+            'canSync' => current_user_can('edit_post', $post->ID),
+            'isSynced' => !$this->has_publish_modified_date_difference($post),
+        );
+    }
+
+    private function build_outdated_item($post) {
         $post_type_object = get_post_type_object($post->post_type);
         $title = get_the_title($post);
 
@@ -469,9 +628,8 @@ final class Maya_Hukuk_Son_Guncelleme {
             'postType' => $post_type_object && !empty($post_type_object->labels->singular_name) ? $post_type_object->labels->singular_name : $post->post_type,
             'publishDate' => $this->format_admin_datetime($post->post_date),
             'modifiedDate' => $this->format_admin_datetime($post->post_modified),
+            'modifiedRaw' => $post->post_modified,
             'editUrl' => get_edit_post_link($post->ID, 'raw'),
-            'canSync' => current_user_can('edit_post', $post->ID),
-            'isSynced' => $this->publish_date_matches_modified_date($post),
         );
     }
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.0 - 2026-06-07
+
+- Tarih uyumsuzlugu raporu saat farkini yok sayacak sekilde guncellendi; ayni gun icindeki saat farklari artik rapora girmez.
+- Uyumsuzluk raporu yil farki, ay farki ve gun farki olarak gruplanip yil farklari en ustte, ay farklari ortada, gun farklari en altta gosterilir.
+- Her rapora `Raporu sil` dugmesi eklendi.
+- Son Guncelleme blogu bulunan yayinlanmis icerikleri son guncelleme tarihi en eski olandan baslayarak listeleyen ayri `Guncel olmayan yazilar` raporu eklendi.
+- Guncel olmayan yazilar raporunda tarih esitleme yerine ilgili editoru acan `Yaziyi guncelle` dugmesi kullanilir.
+
 ## 1.4.0 - 2026-06-07
 
 - WordPress Baslangic ekranina manuel `Son Guncelleme Tarih Kontrolu` kutusu eklendi.

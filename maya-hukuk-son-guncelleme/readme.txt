@@ -4,7 +4,7 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,7 +42,15 @@ Evet. Bu blok ekli olan yayinlanmis yazi/sayfa kaydedildiginde yayin tarihi, son
 
 = Eski yazilardaki uyumsuz tarihleri toplu gormek mumkun mu? =
 
-Evet. WordPress Baslangic ekranindaki `Son Guncelleme Tarih Kontrolu` kutusunda `Kontrol et` dugmesine basin. Eklenti yalnizca Son Guncelleme blogu bulunan ve yayin tarihi son guncelleme tarihiyle uyumsuz olan yayinlanmis yazilari/sayfalari listeler. Her kayit editor linkiyle acilabilir veya listedeki dugmeyle editor acilmadan eslenebilir.
+Evet. WordPress Baslangic ekranindaki `Son Guncelleme Tarih Kontrolu` kutusunda `Kontrol et` dugmesine basin. Eklenti yalnizca Son Guncelleme blogu bulunan ve yayin tarihi son guncelleme tarihiyle uyumsuz olan yayinlanmis yazilari/sayfalari listeler. Saat farki dikkate alinmaz. Yil farki olanlar en ustte, ay farki olanlar ortada, gun farki olanlar en altta gosterilir. Her kayit editor linkiyle acilabilir veya listedeki dugmeyle editor acilmadan eslenebilir.
+
+= Guncel olmayan yazilari nasil gorurum? =
+
+Baslangic ekranindaki `Guncel olmayanlari kontrol et` dugmesi Son Guncelleme blogu bulunan yayinlanmis icerikleri son guncelleme tarihi en eski olandan baslayarak listeler. Bu raporda tarih esitleme dugmesi yoktur; `Yaziyi guncelle` dugmesi ilgili editoru acar.
+
+= Raporlar temizlenebilir mi? =
+
+Evet. Her iki raporda da `Raporu sil` dugmesi vardir.
 
 = Tarih manuel degistirilebilir mi? =
 
@@ -57,6 +65,14 @@ Bu surumde renkler globaldir. Ayarlar ekraninda yaptiginiz degisiklik tum blokla
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 1.5.0 =
+
+- Tarih uyumsuzlugu raporu saat farkini yok sayacak sekilde guncellendi.
+- Uyumsuzluk raporu yil farki, ay farki ve gun farki olarak siralanir.
+- Raporu sil dugmeleri eklendi.
+- Son guncelleme tarihi en eski olan bloklu icerikler icin ayri `Guncel olmayan yazilar` raporu eklendi.
+- Guncel olmayan yazilar raporuna `Yaziyi guncelle` editor linki eklendi.
 
 = 1.4.0 =
 

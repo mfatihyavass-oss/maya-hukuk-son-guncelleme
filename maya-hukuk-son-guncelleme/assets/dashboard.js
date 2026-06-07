@@ -50,15 +50,41 @@
         return cell;
     }
 
-    function createResultsTable(items, messageElement) {
+    function createTitleCell(item) {
+        var titleCell = document.createElement('td');
+        var titleLink = document.createElement('a');
+
+        titleLink.href = item.editUrl || '#';
+        titleLink.textContent = item.title || ('#' + item.id);
+        titleLink.className = 'mh-sg-date-audit-title';
+        titleCell.appendChild(titleLink);
+
+        return titleCell;
+    }
+
+    function createGroupRow(label, columnCount) {
+        var row = document.createElement('tr');
+        var cell = document.createElement('td');
+
+        row.className = 'mh-sg-date-audit-group';
+        cell.colSpan = columnCount;
+        cell.textContent = label;
+        row.appendChild(cell);
+
+        return row;
+    }
+
+    function createMismatchTable(items, messageElement) {
         var table = document.createElement('table');
         var thead = document.createElement('thead');
         var tbody = document.createElement('tbody');
         var headerRow = document.createElement('tr');
+        var lastDifferenceLabel = '';
+        var columnCount = 6;
 
         table.className = 'widefat striped mh-sg-date-audit-table';
 
-        ['Yazı/Sayfa', 'Tür', 'Yayın tarihi', 'Son güncelleme', 'İşlem'].forEach(function (label) {
+        ['Yazı/Sayfa', 'Fark', 'Tür', 'Yayın tarihi', 'Son güncelleme', 'İşlem'].forEach(function (label) {
             var th = document.createElement('th');
             th.scope = 'col';
             th.textContent = label;
@@ -70,16 +96,17 @@
 
         items.forEach(function (item) {
             var row = document.createElement('tr');
-            var titleCell = document.createElement('td');
-            var titleLink = document.createElement('a');
             var actionCell = document.createElement('td');
             var syncButton = document.createElement('button');
+            var differenceLabel = item.differenceLabel || 'Tarih farkı';
 
-            titleLink.href = item.editUrl || '#';
-            titleLink.textContent = item.title || ('#' + item.id);
-            titleLink.className = 'mh-sg-date-audit-title';
-            titleCell.appendChild(titleLink);
-            row.appendChild(titleCell);
+            if (differenceLabel !== lastDifferenceLabel) {
+                tbody.appendChild(createGroupRow(differenceLabel, columnCount));
+                lastDifferenceLabel = differenceLabel;
+            }
+
+            row.appendChild(createTitleCell(item));
+            row.appendChild(createCell(differenceLabel));
             row.appendChild(createCell(item.postType));
             row.appendChild(createCell(item.publishDate));
             row.appendChild(createCell(item.modifiedDate));
@@ -106,16 +133,93 @@
         return table;
     }
 
-    function renderResults(items, resultsElement, messageElement) {
-        clearElement(resultsElement);
+    function createOutdatedTable(items) {
+        var table = document.createElement('table');
+        var thead = document.createElement('thead');
+        var tbody = document.createElement('tbody');
+        var headerRow = document.createElement('tr');
+
+        table.className = 'widefat striped mh-sg-date-audit-table';
+
+        ['Yazı/Sayfa', 'Tür', 'Yayın tarihi', 'Son güncelleme', 'İşlem'].forEach(function (label) {
+            var th = document.createElement('th');
+            th.scope = 'col';
+            th.textContent = label;
+            headerRow.appendChild(th);
+        });
+
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        items.forEach(function (item) {
+            var row = document.createElement('tr');
+            var actionCell = document.createElement('td');
+            var editLink = document.createElement('a');
+
+            row.appendChild(createTitleCell(item));
+            row.appendChild(createCell(item.postType));
+            row.appendChild(createCell(item.publishDate));
+            row.appendChild(createCell(item.modifiedDate));
+
+            editLink.href = item.editUrl || '#';
+            editLink.className = 'button button-small';
+            editLink.textContent = 'Yazıyı güncelle';
+            actionCell.appendChild(editLink);
+            row.appendChild(actionCell);
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+        return table;
+    }
+
+    function clearReport(report) {
+        clearElement(report.resultsElement);
+        setMessage(report.messageElement, '', '');
+    }
+
+    function renderResults(report, items) {
+        clearElement(report.resultsElement);
 
         if (!items || items.length === 0) {
-            setMessage(messageElement, getMessage('empty', 'Uyumsuz yayın tarihi bulunan yazı/sayfa yok.'), 'success');
+            setMessage(report.messageElement, report.emptyMessage, 'success');
             return;
         }
 
-        setMessage(messageElement, items.length + ' uyumsuz kayıt bulundu.', 'warning');
-        resultsElement.appendChild(createResultsTable(items, messageElement));
+        setMessage(report.messageElement, report.foundMessage(items.length), 'warning');
+        report.resultsElement.appendChild(report.createTable(items, report.messageElement));
+    }
+
+    function cleanupEmptyMismatchTable(row, messageElement) {
+        var tableBody = row.parentNode;
+
+        if (!tableBody) {
+            return false;
+        }
+
+        tableBody.removeChild(row);
+
+        Array.prototype.slice.call(tableBody.querySelectorAll('.mh-sg-date-audit-group')).forEach(function (groupRow) {
+            var nextRow = groupRow.nextElementSibling;
+
+            if (!nextRow || nextRow.classList.contains('mh-sg-date-audit-group')) {
+                groupRow.parentNode.removeChild(groupRow);
+            }
+        });
+
+        if (tableBody.querySelectorAll('tr:not(.mh-sg-date-audit-group)').length === 0) {
+            var table = tableBody.closest('table');
+
+            setMessage(messageElement, getMessage('empty', 'Uyumsuz yayın tarihi bulunan yazı/sayfa yok.'), 'success');
+
+            if (table && table.parentNode) {
+                table.parentNode.removeChild(table);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     function syncPublishDate(postId, button, row, messageElement) {
@@ -127,8 +231,6 @@
         postAjax(settings.syncAction, {
             postId: postId
         }).then(function (result) {
-            var tableBody = row.parentNode;
-
             if (!result || !result.success) {
                 button.disabled = false;
                 button.textContent = oldText;
@@ -136,17 +238,8 @@
                 return;
             }
 
-            row.parentNode.removeChild(row);
-            setMessage(messageElement, getMessage('synced', 'Yayın tarihi eşitlendi.'), 'success');
-
-            if (tableBody && tableBody.children.length === 0) {
-                var table = tableBody.closest('table');
-
-                setMessage(messageElement, getMessage('empty', 'Uyumsuz yayın tarihi bulunan yazı/sayfa yok.'), 'success');
-
-                if (table && table.parentNode) {
-                    table.parentNode.removeChild(table);
-                }
+            if (!cleanupEmptyMismatchTable(row, messageElement)) {
+                setMessage(messageElement, getMessage('synced', 'Yayın tarihi eşitlendi.'), 'success');
             }
         }).catch(function () {
             button.disabled = false;
@@ -155,48 +248,77 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var checkButton = document.getElementById('mh-sg-check-date-mismatches');
-        var spinner = document.getElementById('mh-sg-date-audit-spinner');
-        var messageElement = document.getElementById('mh-sg-date-audit-message');
-        var resultsElement = document.getElementById('mh-sg-date-audit-results');
-
-        if (!checkButton || !messageElement || !resultsElement) {
+    function bindReport(report) {
+        if (!report.checkButton || !report.clearButton || !report.messageElement || !report.resultsElement) {
             return;
         }
 
-        checkButton.addEventListener('click', function () {
-            checkButton.disabled = true;
+        report.clearButton.addEventListener('click', function () {
+            clearReport(report);
+        });
 
-            if (spinner) {
-                spinner.classList.add('is-active');
+        report.checkButton.addEventListener('click', function () {
+            report.checkButton.disabled = true;
+
+            if (report.spinner) {
+                report.spinner.classList.add('is-active');
             }
 
-            setMessage(messageElement, getMessage('checking', 'Kontrol ediliyor...'), 'info');
-            clearElement(resultsElement);
+            setMessage(report.messageElement, getMessage('checking', 'Kontrol ediliyor...'), 'info');
+            clearElement(report.resultsElement);
 
-            postAjax(settings.checkAction, {}).then(function (result) {
-                checkButton.disabled = false;
+            postAjax(report.action, {}).then(function (result) {
+                report.checkButton.disabled = false;
 
-                if (spinner) {
-                    spinner.classList.remove('is-active');
+                if (report.spinner) {
+                    report.spinner.classList.remove('is-active');
                 }
 
                 if (!result || !result.success) {
-                    setMessage(messageElement, result && result.data && result.data.message ? result.data.message : getMessage('error', 'İşlem tamamlanamadı.'), 'error');
+                    setMessage(report.messageElement, result && result.data && result.data.message ? result.data.message : getMessage('error', 'İşlem tamamlanamadı.'), 'error');
                     return;
                 }
 
-                renderResults(result.data.items || [], resultsElement, messageElement);
+                renderResults(report, result.data.items || []);
             }).catch(function () {
-                checkButton.disabled = false;
+                report.checkButton.disabled = false;
 
-                if (spinner) {
-                    spinner.classList.remove('is-active');
+                if (report.spinner) {
+                    report.spinner.classList.remove('is-active');
                 }
 
-                setMessage(messageElement, getMessage('error', 'İşlem tamamlanamadı.'), 'error');
+                setMessage(report.messageElement, getMessage('error', 'İşlem tamamlanamadı.'), 'error');
             });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        bindReport({
+            action: settings.checkAction,
+            checkButton: document.getElementById('mh-sg-check-date-mismatches'),
+            clearButton: document.getElementById('mh-sg-clear-date-mismatches'),
+            spinner: document.getElementById('mh-sg-date-audit-spinner'),
+            messageElement: document.getElementById('mh-sg-date-audit-message'),
+            resultsElement: document.getElementById('mh-sg-date-audit-results'),
+            emptyMessage: getMessage('empty', 'Uyumsuz yayın tarihi bulunan yazı/sayfa yok.'),
+            foundMessage: function (count) {
+                return count + ' uyumsuz kayıt bulundu.';
+            },
+            createTable: createMismatchTable
+        });
+
+        bindReport({
+            action: settings.outdatedAction,
+            checkButton: document.getElementById('mh-sg-check-outdated-posts'),
+            clearButton: document.getElementById('mh-sg-clear-outdated-posts'),
+            spinner: document.getElementById('mh-sg-outdated-spinner'),
+            messageElement: document.getElementById('mh-sg-outdated-message'),
+            resultsElement: document.getElementById('mh-sg-outdated-results'),
+            emptyMessage: getMessage('outdatedEmpty', 'Güncel olmayan yazı/sayfa bulunamadı.'),
+            foundMessage: function (count) {
+                return count + ' eski tarihli kayıt bulundu.';
+            },
+            createTable: createOutdatedTable
         });
     });
 })();
