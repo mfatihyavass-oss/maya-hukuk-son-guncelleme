@@ -2,9 +2,12 @@
 
 WordPress Gutenberg editoru icin "Son Guncelleme" blogu ekler. Blok, yazinin son duzenlenme tarihini gosterir ve ayarlar ekranindan belirlenen yazar adini/renklerini kullanir.
 
+Guncel surum: `1.3.1`
+
 ## Ozellikler
 
 - Yazi son kaydedildiginde/duzenlendiginde guncellenen tarih: `Son Guncelleme DD.MM.YYYY`
+- Blok ekli yayinlanmis iceriklerde WordPress yayin tarihini son duzenlenme tarihine otomatik esleme
 - Global yazar adi ayari
 - Metin rengi ayari
 - Arka plan gradyan baslangic ve bitis rengi ayari
@@ -33,11 +36,20 @@ maya-hukuk-son-guncelleme/
 
 Alternatif olarak kokteki `maya-hukuk-son-guncelleme.zip` dosyasini WordPress uzerinden yukleyebilirsin.
 
+## Tarih Davranisi
+
+- Blok, tarihini ilgili yazi/sayfanin son duzenlenme tarihinden alir.
+- Yazi her gun otomatik degismedigi surece tarih de her gun otomatik degismez.
+- Bu blok bulunan yayinlanmis bir yazi/sayfa kaydedildiginde WordPress yayin tarihi de son duzenlenme tarihine eslenir.
+- Daha once blok eklenmis eski yazilar, tekrar kaydedilmedigi surece otomatik degismez.
+- Taslak, revizyon, otomatik kayit ve zamanlanmis iceriklerde yayin tarihi eslemesi yapilmaz.
+
 ## Teknik Notlar
 
 - Blok adi: `maya-hukuk/son-guncelleme`
 - Render sekli: PHP `render_callback` ile sunucu tarafli dinamik cikti
-- Tarih kaynagi: ilgili yazi/sayfanin `modified date` bilgisi
+- Tarih kaynagi: ilgili yazi/sayfanin `modified date` bilgisi; editor onizlemesi de ayni kaynagi izler
+- Yayin tarihi esleme: yalnizca `maya-hukuk/son-guncelleme` blogu bulunan yayinlanmis icerikler kaydedilirken calisir
 - Varsayilan yazar: `Av. Arb. M. Fatih Yavas`
 
 ## Lisans

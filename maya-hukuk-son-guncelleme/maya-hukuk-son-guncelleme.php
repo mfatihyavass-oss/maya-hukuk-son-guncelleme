@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Guncelleme Bloku
  * Description:       Gutenberg icin dinamik Son Guncelleme blogu ve global ayarlar.
- * Version:           1.1.0
+ * Version:           1.3.1
  * Author:            Maya Hukuk
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,6 +14,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Maya_Hukuk_Son_Guncelleme {
+    const BLOCK_NAME = 'maya-hukuk/son-guncelleme';
     const OPTION_AUTHOR = 'mh_sg_author_name';
     const OPTION_TEXT_COLOR = 'mh_sg_text_color';
     const OPTION_GRADIENT_START = 'mh_sg_gradient_start';
@@ -25,6 +26,7 @@ final class Maya_Hukuk_Son_Guncelleme {
         add_action('init', array($this, 'register_block'));
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_menu', array($this, 'register_settings_page'));
+        add_filter('wp_insert_post_data', array($this, 'sync_publish_date_before_save'), 20, 4);
     }
 
     public static function activate() {
@@ -52,7 +54,7 @@ final class Maya_Hukuk_Son_Guncelleme {
         wp_register_script(
             $editor_script_handle,
             plugins_url('assets/editor.js', __FILE__),
-            array('wp-blocks', 'wp-element', 'wp-block-editor', 'wp-i18n'),
+            array('wp-blocks', 'wp-element', 'wp-block-editor', 'wp-data', 'wp-i18n'),
             filemtime(plugin_dir_path(__FILE__) . 'assets/editor.js'),
             true
         );
@@ -65,7 +67,7 @@ final class Maya_Hukuk_Son_Guncelleme {
         );
 
         wp_localize_script($editor_script_handle, 'mhSgSettings', array(
-            'todayDate' => wp_date('d.m.Y'),
+            'fallbackDate' => wp_date('d.m.Y'),
             'authorName' => $this->get_author_name(),
             'textColor' => $this->get_text_color(),
             'gradientStart' => $this->get_gradient_start_color(),
@@ -233,6 +235,29 @@ final class Maya_Hukuk_Son_Guncelleme {
 
     public function sanitize_gradient_end_color($color) {
         return $this->sanitize_color_with_default($color, '#122A57');
+    }
+
+    public function sync_publish_date_before_save($data, $postarr, $unsanitized_postarr, $update) {
+        if (!$update || !isset($data['post_status'], $data['post_type'], $data['post_content'])) {
+            return $data;
+        }
+
+        if ($data['post_status'] !== 'publish' || $data['post_type'] === 'revision') {
+            return $data;
+        }
+
+        if (!has_block(self::BLOCK_NAME, $data['post_content'])) {
+            return $data;
+        }
+
+        if (empty($data['post_modified']) || empty($data['post_modified_gmt'])) {
+            return $data;
+        }
+
+        $data['post_date'] = $data['post_modified'];
+        $data['post_date_gmt'] = $data['post_modified_gmt'];
+
+        return $data;
     }
 
     private function sanitize_color_with_default($color, $default_color) {

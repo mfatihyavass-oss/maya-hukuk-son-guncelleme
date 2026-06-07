@@ -4,11 +4,11 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Gutenberg icin dinamik "Son Guncelleme" blogu. Tarihi yalnizca yazi/sayfa duzenlendiginde degisir; yazar adi ve renkler merkezi ayardan yonetilir.
+Gutenberg icin dinamik "Son Guncelleme" blogu. Blok ekli yayinlanmis icerik kaydedildiginde yayin tarihi de son duzenlenme tarihine cekilir; yazar adi ve renkler merkezi ayardan yonetilir.
 
 == Description ==
 
@@ -36,6 +36,10 @@ Boylece tum iceriklerde tek tip, kurumsal bir gorunum elde edilir.
 
 Hayir. Tarih, sadece icerik editorunde kaydedildiginde/guncellendiginde degisir.
 
+= WordPress sag panelindeki yayin tarihi de degisir mi? =
+
+Evet. Bu blok ekli olan yayinlanmis yazi/sayfa kaydedildiginde yayin tarihi, son duzenlenme tarihine eslenir.
+
 = Tarih manuel degistirilebilir mi? =
 
 Bu surumde blokta manuel tarih alani yoktur. Tarih, yazi/sayfanin son duzenlenme tarihinden gelir.
@@ -49,6 +53,19 @@ Bu surumde renkler globaldir. Ayarlar ekraninda yaptiginiz degisiklik tum blokla
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 1.3.1 =
+
+- Yayin tarihi esleme islemi kayittan sonra ayri veritabani guncellemesi yapmak yerine WordPress kaydi sirasinda uygulanir.
+
+= 1.3.0 =
+
+- Bu blok ekli yayinlanmis icerikler kaydedildiginde WordPress yayin tarihi, son duzenlenme tarihine otomatik eslenir.
+
+= 1.2.0 =
+
+- Editor onizlemesindeki tarih, canli sayfadaki gibi yazi/sayfanin son duzenlenme tarihinden okunur.
+- Blok scripti WordPress editor verisi degistiginde tarihi otomatik yeniler.
 
 = 1.1.0 =
 
