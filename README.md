@@ -20,6 +20,8 @@ Guncel surum: `1.4.0`
 ```text
 maya-hukuk-son-guncelleme/
   assets/
+    dashboard.css
+    dashboard.js
     editor.js
     style.css
   block.json
