@@ -4,11 +4,11 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.5.2
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Gutenberg icin dinamik "Son Guncelleme" blogu. Blok ekli yayinlanmis icerik kaydedildiginde yayin tarihi de son duzenlenme tarihine cekilir; yazar adi ve renkler merkezi ayardan yonetilir.
+Gutenberg icin dinamik "Son Guncelleme" blogu. Blok ekli yayinlanmis icerik kaydedildiginde yayin tarihi de son duzenlenme tarihine cekilir; yazar adi, bio alani, butonlar, bilgi kutucuklari ve renkler merkezi ayardan yonetilir.
 
 == Description ==
 
@@ -17,6 +17,9 @@ Maya Hukuk Son Guncelleme Bloku, sayfa ve yazilarinizda tek tikla standart bir s
 Blok, ilgili yazi/sayfanin son duzenlenme tarihini gosterir ve asagidaki global ayarlari kullanir:
 
 - Yazar adi
+- Bio alani
+- Hakkimizda ve Iletisim varsayilan butonlari
+- Baro varsayilan bilgi kutucugu
 - Metin rengi
 - Gradyan baslangic rengi
 - Gradyan bitis rengi
@@ -27,7 +30,7 @@ Boylece tum iceriklerde tek tip, kurumsal bir gorunum elde edilir.
 
 1. Eklenti dosyalarini `wp-content/plugins/maya-hukuk-son-guncelleme` klasorune yukleyin.
 2. WordPress panelinden eklentiyi etkinlestirin.
-3. `Ayarlar > Son Guncelleme Bloku` ekranindan yazar/renk ayarlarini kaydedin.
+3. `Ayarlar > Son Guncelleme Bloku` ekranindan yazar, bio, buton, bilgi kutusu ve renk ayarlarini kaydedin.
 4. Yazinizda veya sayfanizda `Maya Hukuk - Son Guncelleme` blogunu ekleyin.
 
 == Frequently Asked Questions ==
@@ -60,11 +63,28 @@ Bu surumde blokta manuel tarih alani yoktur. Tarih, yazi/sayfanin son duzenlenme
 
 Bu surumde renkler globaldir. Ayarlar ekraninda yaptiginiz degisiklik tum bloklara yansir.
 
+= Varsayilan butonlari veya Baro kutusunu kaldirabilir miyim? =
+
+Evet. Ayarlar ekraninda buton veya bilgi kutusu satirlarini silebilir ya da bos birakabilirsiniz. Bos satirlar kaydedilmez ve on yuzde gorunmez.
+
 = Eklentiyi kaldirinca ayarlar silinir mi? =
 
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 1.6.1 =
+
+- Blok tasarimi koyu lacivert ve altin vurgulu yeni stile guncellendi.
+- Buton hover hareketi, ok animasyonu ve tiklama geri bildirimi eklendi.
+- On yuzde imleci takip eden hafif vurgu efekti eklendi.
+
+= 1.6.0 =
+
+- Global bio alani eklendi.
+- Varsayilan Hakkimizda ve Iletisim butonlari eklendi.
+- Varsayilan Baro bilgi kutucugu eklendi.
+- Butonlar ve bilgi kutucuklari ayarlar ekranindan cogaltilabilir, duzenlenebilir veya kaldirilabilir hale getirildi.
 
 = 1.5.2 =
 

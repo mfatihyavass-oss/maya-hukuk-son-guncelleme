@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       Maya Hukuk Son Guncelleme Bloku
- * Description:       Gutenberg icin dinamik Son Guncelleme blogu ve global ayarlar.
- * Version:           1.5.2
+ * Description:       Gutenberg icin dinamik Son Guncelleme blogu, bio, buton ve bilgi kutusu ayarlari.
+ * Version:           1.6.1
  * Author:            Maya Hukuk
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,6 +20,9 @@ final class Maya_Hukuk_Son_Guncelleme {
     const AJAX_OUTDATED_ACTION = 'mh_sg_check_outdated_posts';
     const AJAX_SYNC_ACTION = 'mh_sg_sync_publish_date';
     const OPTION_AUTHOR = 'mh_sg_author_name';
+    const OPTION_BIO = 'mh_sg_bio_text';
+    const OPTION_ACTION_BUTTONS = 'mh_sg_action_buttons';
+    const OPTION_INFO_BOXES = 'mh_sg_info_boxes';
     const OPTION_TEXT_COLOR = 'mh_sg_text_color';
     const OPTION_GRADIENT_START = 'mh_sg_gradient_start';
     const OPTION_GRADIENT_END = 'mh_sg_gradient_end';
@@ -43,21 +46,34 @@ final class Maya_Hukuk_Son_Guncelleme {
             add_option(self::OPTION_AUTHOR, 'Av. Arb. M. Fatih Yavaş');
         }
 
+        if (get_option(self::OPTION_BIO) === false) {
+            add_option(self::OPTION_BIO, self::get_default_bio_text());
+        }
+
+        if (get_option(self::OPTION_ACTION_BUTTONS) === false) {
+            add_option(self::OPTION_ACTION_BUTTONS, self::get_default_action_buttons());
+        }
+
+        if (get_option(self::OPTION_INFO_BOXES) === false) {
+            add_option(self::OPTION_INFO_BOXES, self::get_default_info_boxes());
+        }
+
         if (get_option(self::OPTION_TEXT_COLOR) === false) {
             add_option(self::OPTION_TEXT_COLOR, '#FFFFFF');
         }
 
         if (get_option(self::OPTION_GRADIENT_START) === false) {
-            add_option(self::OPTION_GRADIENT_START, '#0B1530');
+            add_option(self::OPTION_GRADIENT_START, '#07111F');
         }
 
         if (get_option(self::OPTION_GRADIENT_END) === false) {
-            add_option(self::OPTION_GRADIENT_END, '#122A57');
+            add_option(self::OPTION_GRADIENT_END, '#1F3D63');
         }
     }
 
     public function register_block() {
         $editor_script_handle = 'mh-sg-editor-script';
+        $view_script_handle = 'mh-sg-view-script';
         $style_handle = 'mh-sg-style';
 
         wp_register_script(
@@ -75,9 +91,20 @@ final class Maya_Hukuk_Son_Guncelleme {
             filemtime(plugin_dir_path(__FILE__) . 'assets/style.css')
         );
 
+        wp_register_script(
+            $view_script_handle,
+            plugins_url('assets/view.js', __FILE__),
+            array(),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/view.js'),
+            true
+        );
+
         wp_localize_script($editor_script_handle, 'mhSgSettings', array(
             'fallbackDate' => wp_date('d.m.Y'),
             'authorName' => $this->get_author_name(),
+            'bioText' => $this->get_bio_text(),
+            'actionButtons' => $this->get_action_buttons(),
+            'infoBoxes' => $this->get_info_boxes(),
             'textColor' => $this->get_text_color(),
             'gradientStart' => $this->get_gradient_start_color(),
             'gradientEnd' => $this->get_gradient_end_color(),
@@ -93,11 +120,16 @@ final class Maya_Hukuk_Son_Guncelleme {
 
     public function render_block($attributes = array(), $content = '', $block = null) {
         $author_name = $this->get_author_name();
+        $bio_text = $this->get_bio_text();
+        $action_buttons = $this->get_action_buttons();
+        $info_boxes = $this->get_info_boxes();
         $text_color = $this->get_text_color();
         $gradient_start = $this->get_gradient_start_color();
         $gradient_end = $this->get_gradient_end_color();
 
         $date_text = $this->get_last_updated_date($block);
+
+        wp_enqueue_script('mh-sg-view-script');
 
         $styles = sprintf(
             '--mh-sg-text-color: %s; --mh-sg-gradient-start: %s; --mh-sg-gradient-end: %s;',
@@ -109,8 +141,42 @@ final class Maya_Hukuk_Son_Guncelleme {
         ob_start();
         ?>
         <div class="mh-sg-block" style="<?php echo esc_attr($styles); ?>">
-            <p class="mh-sg-date"><?php echo esc_html('Son Güncelleme ' . $date_text); ?></p>
-            <p class="mh-sg-author"><?php echo esc_html($author_name); ?></p>
+            <div class="mh-sg-content">
+                <div class="mh-sg-meta">
+                    <p class="mh-sg-date"><?php echo esc_html('Son Güncelleme ' . $date_text); ?></p>
+                    <p class="mh-sg-author"><?php echo esc_html($author_name); ?></p>
+                </div>
+
+                <?php if ($bio_text !== '') : ?>
+                    <p class="mh-sg-bio"><?php echo esc_html($bio_text); ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($info_boxes)) : ?>
+                    <div class="mh-sg-info-list" aria-label="Bilgi kutucuklari">
+                        <?php foreach ($info_boxes as $info_box) : ?>
+                            <div class="mh-sg-info-box">
+                                <?php if (!empty($info_box['title'])) : ?>
+                                    <span class="mh-sg-info-title"><?php echo esc_html($info_box['title']); ?></span>
+                                <?php endif; ?>
+                                <?php if (!empty($info_box['text'])) : ?>
+                                    <span class="mh-sg-info-text"><?php echo esc_html($info_box['text']); ?></span>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($action_buttons)) : ?>
+                    <div class="mh-sg-actions" aria-label="Baglantilar">
+                        <?php foreach ($action_buttons as $button) : ?>
+                            <a class="mh-sg-action" href="<?php echo esc_url($button['url']); ?>">
+                                <span class="mh-sg-action-label"><?php echo esc_html($button['label']); ?></span>
+                                <span class="mh-sg-action-icon" aria-hidden="true">&rarr;</span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
         <?php
         return ob_get_clean();
@@ -123,6 +189,24 @@ final class Maya_Hukuk_Son_Guncelleme {
             'default' => 'Av. Arb. M. Fatih Yavaş',
         ));
 
+        register_setting(self::SETTINGS_GROUP, self::OPTION_BIO, array(
+            'type' => 'string',
+            'sanitize_callback' => array($this, 'sanitize_bio_text'),
+            'default' => self::get_default_bio_text(),
+        ));
+
+        register_setting(self::SETTINGS_GROUP, self::OPTION_ACTION_BUTTONS, array(
+            'type' => 'array',
+            'sanitize_callback' => array($this, 'sanitize_action_buttons'),
+            'default' => self::get_default_action_buttons(),
+        ));
+
+        register_setting(self::SETTINGS_GROUP, self::OPTION_INFO_BOXES, array(
+            'type' => 'array',
+            'sanitize_callback' => array($this, 'sanitize_info_boxes'),
+            'default' => self::get_default_info_boxes(),
+        ));
+
         register_setting(self::SETTINGS_GROUP, self::OPTION_TEXT_COLOR, array(
             'type' => 'string',
             'sanitize_callback' => array($this, 'sanitize_text_color'),
@@ -132,13 +216,13 @@ final class Maya_Hukuk_Son_Guncelleme {
         register_setting(self::SETTINGS_GROUP, self::OPTION_GRADIENT_START, array(
             'type' => 'string',
             'sanitize_callback' => array($this, 'sanitize_gradient_start_color'),
-            'default' => '#0B1530',
+            'default' => '#07111F',
         ));
 
         register_setting(self::SETTINGS_GROUP, self::OPTION_GRADIENT_END, array(
             'type' => 'string',
             'sanitize_callback' => array($this, 'sanitize_gradient_end_color'),
-            'default' => '#122A57',
+            'default' => '#1F3D63',
         ));
     }
 
@@ -153,6 +237,31 @@ final class Maya_Hukuk_Son_Guncelleme {
     }
 
     public function enqueue_dashboard_assets($hook_suffix) {
+        if ($hook_suffix === 'settings_page_' . self::SETTINGS_PAGE_SLUG && current_user_can('manage_options')) {
+            $settings_script_handle = 'mh-sg-settings-script';
+            $settings_style_handle = 'mh-sg-settings-style';
+
+            wp_register_script(
+                $settings_script_handle,
+                plugins_url('assets/settings.js', __FILE__),
+                array(),
+                filemtime(plugin_dir_path(__FILE__) . 'assets/settings.js'),
+                true
+            );
+
+            wp_register_style(
+                $settings_style_handle,
+                plugins_url('assets/settings.css', __FILE__),
+                array(),
+                filemtime(plugin_dir_path(__FILE__) . 'assets/settings.css')
+            );
+
+            wp_enqueue_script($settings_script_handle);
+            wp_enqueue_style($settings_style_handle);
+
+            return;
+        }
+
         if ($hook_suffix !== 'index.php' || !current_user_can('edit_posts')) {
             return;
         }
@@ -249,6 +358,9 @@ final class Maya_Hukuk_Son_Guncelleme {
         }
 
         $author_name = $this->get_author_name();
+        $bio_text = $this->get_bio_text();
+        $action_buttons = $this->get_action_buttons();
+        $info_boxes = $this->get_info_boxes();
         $text_color = $this->get_text_color();
         $gradient_start = $this->get_gradient_start_color();
         $gradient_end = $this->get_gradient_end_color();
@@ -269,6 +381,61 @@ final class Maya_Hukuk_Son_Guncelleme {
                                 value="<?php echo esc_attr($author_name); ?>"
                                 class="regular-text"
                             />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row"><label for="<?php echo esc_attr(self::OPTION_BIO); ?>">Bio Alani</label></th>
+                        <td>
+                            <textarea
+                                id="<?php echo esc_attr(self::OPTION_BIO); ?>"
+                                name="<?php echo esc_attr(self::OPTION_BIO); ?>"
+                                class="large-text mh-sg-bio-field"
+                                rows="4"
+                            ><?php echo esc_textarea($bio_text); ?></textarea>
+                            <p class="description">Yazar, kurum veya sayfa hakkinda kisa bilgi gostermek icin kullanilir. Bos birakirsaniz blokta gorunmez.</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Butonlar</th>
+                        <td>
+                            <div class="mh-sg-settings-repeater" data-mh-sg-repeater data-next-index="<?php echo esc_attr(count($action_buttons)); ?>">
+                                <input type="hidden" name="<?php echo esc_attr(self::OPTION_ACTION_BUTTONS); ?>[_mh_empty]" value="1" />
+                                <div class="mh-sg-repeater-items" data-mh-sg-items>
+                                    <?php foreach ($action_buttons as $index => $button) : ?>
+                                        <?php $this->render_action_button_setting_row($index, $button); ?>
+                                    <?php endforeach; ?>
+                                </div>
+                                <template data-mh-sg-template>
+                                    <?php $this->render_action_button_setting_row('__INDEX__', array()); ?>
+                                </template>
+                                <p>
+                                    <button type="button" class="button" data-mh-sg-add>Buton ekle</button>
+                                </p>
+                                <p class="description">Varsayilan olarak Hakkimizda ve Iletisim gelir. Butonlari farkli sayfalara yonlendirebilir, yenisini ekleyebilir veya silebilirsiniz.</p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Bilgi Kutucuklari</th>
+                        <td>
+                            <div class="mh-sg-settings-repeater" data-mh-sg-repeater data-next-index="<?php echo esc_attr(count($info_boxes)); ?>">
+                                <input type="hidden" name="<?php echo esc_attr(self::OPTION_INFO_BOXES); ?>[_mh_empty]" value="1" />
+                                <div class="mh-sg-repeater-items" data-mh-sg-items>
+                                    <?php foreach ($info_boxes as $index => $info_box) : ?>
+                                        <?php $this->render_info_box_setting_row($index, $info_box); ?>
+                                    <?php endforeach; ?>
+                                </div>
+                                <template data-mh-sg-template>
+                                    <?php $this->render_info_box_setting_row('__INDEX__', array()); ?>
+                                </template>
+                                <p>
+                                    <button type="button" class="button" data-mh-sg-add>Kutu ekle</button>
+                                </p>
+                                <p class="description">Varsayilan olarak Baro kutusu gelir. Bu kutulari baska bilgiler icin kullanabilir, cogaltabilir veya tamamen kaldirabilirsiniz.</p>
+                            </div>
                         </td>
                     </tr>
 
@@ -325,16 +492,140 @@ final class Maya_Hukuk_Son_Guncelleme {
         return $sanitized;
     }
 
+    public function sanitize_bio_text($value) {
+        if (!is_scalar($value)) {
+            return '';
+        }
+
+        return sanitize_textarea_field($value);
+    }
+
+    public function sanitize_action_buttons($buttons) {
+        if (!is_array($buttons)) {
+            return array();
+        }
+
+        $sanitized_buttons = array();
+
+        foreach ($buttons as $button) {
+            if (!is_array($button)) {
+                continue;
+            }
+
+            $label = isset($button['label']) && is_scalar($button['label']) ? sanitize_text_field($button['label']) : '';
+            $url = isset($button['url']) && is_scalar($button['url']) ? esc_url_raw(trim((string) $button['url'])) : '';
+
+            if ($label === '' || $url === '') {
+                continue;
+            }
+
+            $sanitized_buttons[] = array(
+                'label' => $label,
+                'url' => $url,
+            );
+        }
+
+        return $sanitized_buttons;
+    }
+
+    public function sanitize_info_boxes($info_boxes) {
+        if (!is_array($info_boxes)) {
+            return array();
+        }
+
+        $sanitized_boxes = array();
+
+        foreach ($info_boxes as $info_box) {
+            if (!is_array($info_box)) {
+                continue;
+            }
+
+            $title = isset($info_box['title']) && is_scalar($info_box['title']) ? sanitize_text_field($info_box['title']) : '';
+            $text = isset($info_box['text']) && is_scalar($info_box['text']) ? sanitize_text_field($info_box['text']) : '';
+
+            if ($title === '' && $text === '') {
+                continue;
+            }
+
+            $sanitized_boxes[] = array(
+                'title' => $title,
+                'text' => $text,
+            );
+        }
+
+        return $sanitized_boxes;
+    }
+
     public function sanitize_text_color($color) {
         return $this->sanitize_color_with_default($color, '#FFFFFF');
     }
 
     public function sanitize_gradient_start_color($color) {
-        return $this->sanitize_color_with_default($color, '#0B1530');
+        return $this->sanitize_color_with_default($color, '#07111F');
     }
 
     public function sanitize_gradient_end_color($color) {
-        return $this->sanitize_color_with_default($color, '#122A57');
+        return $this->sanitize_color_with_default($color, '#1F3D63');
+    }
+
+    private function render_action_button_setting_row($index, $button) {
+        $label = isset($button['label']) ? $button['label'] : '';
+        $url = isset($button['url']) ? $button['url'] : '';
+        ?>
+        <div class="mh-sg-repeater-row" data-mh-sg-row>
+            <label>
+                <span>Buton metni</span>
+                <input
+                    type="text"
+                    name="<?php echo esc_attr(self::OPTION_ACTION_BUTTONS . '[' . $index . '][label]'); ?>"
+                    value="<?php echo esc_attr($label); ?>"
+                    class="regular-text"
+                    placeholder="Hakkımızda"
+                />
+            </label>
+            <label>
+                <span>Bağlantı</span>
+                <input
+                    type="text"
+                    name="<?php echo esc_attr(self::OPTION_ACTION_BUTTONS . '[' . $index . '][url]'); ?>"
+                    value="<?php echo esc_attr($url); ?>"
+                    class="regular-text"
+                    placeholder="/hakkimizda/"
+                />
+            </label>
+            <button type="button" class="button button-link-delete mh-sg-remove-row" data-mh-sg-remove>Sil</button>
+        </div>
+        <?php
+    }
+
+    private function render_info_box_setting_row($index, $info_box) {
+        $title = isset($info_box['title']) ? $info_box['title'] : '';
+        $text = isset($info_box['text']) ? $info_box['text'] : '';
+        ?>
+        <div class="mh-sg-repeater-row" data-mh-sg-row>
+            <label>
+                <span>Kutu başlığı</span>
+                <input
+                    type="text"
+                    name="<?php echo esc_attr(self::OPTION_INFO_BOXES . '[' . $index . '][title]'); ?>"
+                    value="<?php echo esc_attr($title); ?>"
+                    class="regular-text"
+                    placeholder="Baro"
+                />
+            </label>
+            <label>
+                <span>Kutu metni</span>
+                <input
+                    type="text"
+                    name="<?php echo esc_attr(self::OPTION_INFO_BOXES . '[' . $index . '][text]'); ?>"
+                    value="<?php echo esc_attr($text); ?>"
+                    class="regular-text"
+                    placeholder="Bağlı olunan baro"
+                />
+            </label>
+            <button type="button" class="button button-link-delete mh-sg-remove-row" data-mh-sg-remove>Sil</button>
+        </div>
+        <?php
     }
 
     public function sync_publish_date_before_save($data, $postarr, $unsanitized_postarr, $update) {
@@ -413,8 +704,64 @@ final class Maya_Hukuk_Son_Guncelleme {
         return strtoupper($sanitized);
     }
 
+    private static function get_default_bio_text() {
+        return 'Av. Arb. M. Fatih Yavaş tarafından güncel mevzuat ve uygulama notlarıyla hazırlanan kısa bilgilendirme alanı.';
+    }
+
+    private static function get_default_action_buttons() {
+        return array(
+            array(
+                'label' => 'Hakkımızda',
+                'url' => '/hakkimizda/',
+            ),
+            array(
+                'label' => 'İletişim',
+                'url' => '/iletisim/',
+            ),
+        );
+    }
+
+    private static function get_default_info_boxes() {
+        return array(
+            array(
+                'title' => 'Baro',
+                'text' => 'Bağlı olunan baro',
+            ),
+        );
+    }
+
     private function get_author_name() {
         return $this->sanitize_author_name(get_option(self::OPTION_AUTHOR, 'Av. Arb. M. Fatih Yavaş'));
+    }
+
+    private function get_bio_text() {
+        $bio_text = get_option(self::OPTION_BIO, false);
+
+        if ($bio_text === false) {
+            $bio_text = self::get_default_bio_text();
+        }
+
+        return $this->sanitize_bio_text($bio_text);
+    }
+
+    private function get_action_buttons() {
+        $action_buttons = get_option(self::OPTION_ACTION_BUTTONS, false);
+
+        if ($action_buttons === false) {
+            $action_buttons = self::get_default_action_buttons();
+        }
+
+        return $this->sanitize_action_buttons($action_buttons);
+    }
+
+    private function get_info_boxes() {
+        $info_boxes = get_option(self::OPTION_INFO_BOXES, false);
+
+        if ($info_boxes === false) {
+            $info_boxes = self::get_default_info_boxes();
+        }
+
+        return $this->sanitize_info_boxes($info_boxes);
     }
 
     private function get_text_color() {
@@ -422,11 +769,11 @@ final class Maya_Hukuk_Son_Guncelleme {
     }
 
     private function get_gradient_start_color() {
-        return $this->sanitize_gradient_start_color(get_option(self::OPTION_GRADIENT_START, '#0B1530'));
+        return $this->sanitize_gradient_start_color(get_option(self::OPTION_GRADIENT_START, '#07111F'));
     }
 
     private function get_gradient_end_color() {
-        return $this->sanitize_gradient_end_color(get_option(self::OPTION_GRADIENT_END, '#122A57'));
+        return $this->sanitize_gradient_end_color(get_option(self::OPTION_GRADIENT_END, '#1F3D63'));
     }
 
     private function verify_dashboard_ajax_request() {
