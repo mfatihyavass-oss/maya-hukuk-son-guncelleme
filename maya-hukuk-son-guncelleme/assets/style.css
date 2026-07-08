@@ -1,64 +1,236 @@
 .mh-sg-block {
     --mh-sg-text-color: #FFFFFF;
-    --mh-sg-gradient-start: #0B1530;
-    --mh-sg-gradient-end: #122A57;
+    --mh-sg-gradient-start: #07111F;
+    --mh-sg-gradient-mid: #10253F;
+    --mh-sg-gradient-end: #1F3D63;
+    --mh-sg-accent: #C8A24A;
+    --mh-sg-accent-light: #F0D27B;
+    --mh-sg-pointer-opacity: 0;
+    --mh-sg-cursor-x: 50%;
+    --mh-sg-cursor-y: 0%;
     position: relative;
     overflow: hidden;
-    border-radius: 14px;
-    padding: 20px 22px;
+    box-sizing: border-box;
+    margin: 36px 0;
+    padding: 34px;
+    border-radius: 8px;
     color: var(--mh-sg-text-color);
-    background: linear-gradient(135deg, var(--mh-sg-gradient-start) 0%, var(--mh-sg-gradient-end) 100%);
-    box-shadow: 0 14px 32px rgba(4, 10, 24, 0.35);
+    background:
+        radial-gradient(circle at var(--mh-sg-cursor-x) var(--mh-sg-cursor-y), rgba(200, 162, 74, var(--mh-sg-pointer-opacity)), transparent 28%),
+        linear-gradient(135deg, var(--mh-sg-gradient-start) 0%, var(--mh-sg-gradient-mid) 48%, var(--mh-sg-gradient-end) 100%);
+    box-shadow: 0 18px 45px rgba(7, 17, 31, 0.35);
     isolation: isolate;
-}
-
-.mh-sg-block::before,
-.mh-sg-block::after {
-    content: "";
-    position: absolute;
-    inset: auto;
-    border-radius: 999px;
-    pointer-events: none;
-    z-index: -1;
+    transition: box-shadow 250ms ease, transform 250ms ease;
 }
 
 .mh-sg-block::before {
-    width: 220px;
-    height: 220px;
-    right: -85px;
-    top: -105px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 70%);
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 0%, rgba(200, 162, 74, 0.13) 38%, transparent 70%);
+    opacity: 0.75;
 }
 
-.mh-sg-block::after {
-    width: 180px;
-    height: 180px;
-    left: -65px;
-    bottom: -95px;
-    background: radial-gradient(circle, rgba(89, 151, 255, 0.24) 0%, rgba(89, 151, 255, 0) 74%);
+.mh-sg-block.is-pointer-active {
+    --mh-sg-pointer-opacity: 0.18;
+}
+
+.mh-sg-content {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
 }
 
 .mh-sg-date,
-.mh-sg-author {
+.mh-sg-author,
+.mh-sg-bio {
     margin: 0;
-    line-height: 1.35;
     color: inherit;
+    overflow-wrap: anywhere;
 }
 
 .mh-sg-date {
-    font-size: 1.05rem;
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 7px 13px;
+    border: 1px solid rgba(200, 162, 74, 0.45);
+    border-radius: 999px;
+    color: #F4D37B;
+    background: rgba(200, 162, 74, 0.16);
+    font-size: 0.8125rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    line-height: 1.2;
+    letter-spacing: 0;
 }
 
 .mh-sg-author {
-    margin-top: 7px;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.mh-sg-bio {
+    max-width: 68ch;
+    margin-top: 12px;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.mh-sg-info-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.mh-sg-info-box {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(200, 162, 74, 0.28);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(2px);
+}
+
+.mh-sg-info-title,
+.mh-sg-info-text {
+    color: inherit;
+    overflow-wrap: anywhere;
+}
+
+.mh-sg-info-title {
+    color: #F4D37B;
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.mh-sg-info-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.94rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.mh-sg-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.mh-sg-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    max-width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: 14px 20px;
+    border: 0;
+    border-radius: 8px;
+    color: #07111F !important;
+    background: linear-gradient(135deg, var(--mh-sg-accent), var(--mh-sg-accent-light));
+    box-shadow: 0 10px 26px rgba(200, 162, 74, 0.32);
     font-size: 0.96rem;
-    font-weight: 500;
-    opacity: 0.95;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none !important;
+    overflow-wrap: anywhere;
+    transition: transform 250ms ease, box-shadow 250ms ease, filter 250ms ease;
+}
+
+.mh-sg-action:hover,
+.mh-sg-action:focus {
+    color: #07111F !important;
+    filter: brightness(1.05);
+    box-shadow: 0 16px 34px rgba(200, 162, 74, 0.42);
+    text-decoration: none !important;
+    transform: translateY(-3px);
+}
+
+.mh-sg-action:focus-visible {
+    outline: 2px solid #F4D37B;
+    outline-offset: 3px;
+}
+
+.mh-sg-action-icon {
+    flex: 0 0 auto;
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: transform 250ms ease;
+}
+
+.mh-sg-action:hover .mh-sg-action-icon,
+.mh-sg-action:focus .mh-sg-action-icon {
+    transform: translateX(4px);
+}
+
+.mh-sg-action.is-clicked,
+.mh-sg-action.maya-ai-clicked {
+    animation: mh-sg-button-pulse 360ms ease;
 }
 
 .editor-styles-wrapper .mh-sg-block,
 .block-editor-block-list__layout .mh-sg-block {
-    min-height: 88px;
+    min-height: 0;
+}
+
+@keyframes mh-sg-button-pulse {
+    0% {
+        transform: translateY(-3px) scale(1);
+    }
+
+    50% {
+        transform: translateY(-3px) scale(0.98);
+    }
+
+    100% {
+        transform: translateY(-3px) scale(1);
+    }
+}
+
+@media (max-width: 640px) {
+    .mh-sg-block {
+        padding: 26px 22px;
+    }
+
+    .mh-sg-author {
+        font-size: 1.55rem;
+    }
+
+    .mh-sg-info-list {
+        grid-template-columns: 1fr;
+    }
+
+    .mh-sg-action {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mh-sg-block,
+    .mh-sg-action,
+    .mh-sg-action-icon {
+        transition: none;
+    }
+
+    .mh-sg-action:hover,
+    .mh-sg-action:focus,
+    .mh-sg-action:hover .mh-sg-action-icon,
+    .mh-sg-action:focus .mh-sg-action-icon {
+        transform: none;
+    }
+
+    .mh-sg-action.is-clicked,
+    .mh-sg-action.maya-ai-clicked {
+        animation: none;
+    }
 }

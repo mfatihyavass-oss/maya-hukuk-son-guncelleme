@@ -2,11 +2,11 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "maya-hukuk/son-guncelleme",
-  "version": "1.5.2",
+  "version": "1.6.1",
   "title": "Maya Hukuk - Son Güncelleme",
   "category": "widgets",
   "icon": "update",
-  "description": "Yazinin son duzenlenme tarihini ve varsayilan yazari gosteren dinamik blok.",
+  "description": "Yazinin son duzenlenme tarihini, bio alanini, butonlari ve bilgi kutularini gosteren dinamik blok.",
   "keywords": ["son", "guncelleme", "maya hukuk"],
   "supports": {
     "html": false,

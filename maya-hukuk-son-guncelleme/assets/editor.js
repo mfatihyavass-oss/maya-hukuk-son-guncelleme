@@ -5,10 +5,13 @@
     var settings = window.mhSgSettings || {};
     var fallbackDate = settings.fallbackDate || settings.todayDate || '';
     var authorName = settings.authorName || 'Av. Arb. M. Fatih Yavaş';
+    var bioText = settings.bioText || '';
+    var actionButtons = Array.isArray(settings.actionButtons) ? settings.actionButtons : [];
+    var infoBoxes = Array.isArray(settings.infoBoxes) ? settings.infoBoxes : [];
     var blockStyle = {
         '--mh-sg-text-color': settings.textColor || '#FFFFFF',
-        '--mh-sg-gradient-start': settings.gradientStart || '#0B1530',
-        '--mh-sg-gradient-end': settings.gradientEnd || '#122A57'
+        '--mh-sg-gradient-start': settings.gradientStart || '#07111F',
+        '--mh-sg-gradient-end': settings.gradientEnd || '#1F3D63'
     };
 
     function formatDate(dateValue) {
@@ -51,6 +54,10 @@
         return formatDate(modifiedDate);
     }
 
+    function preventEditorNavigation(event) {
+        event.preventDefault();
+    }
+
     blocks.registerBlockType('maya-hukuk/son-guncelleme', {
         edit: function () {
             var modifiedDate = useModifiedDate();
@@ -62,8 +69,46 @@
             return createElement(
                 'div',
                 blockProps,
-                createElement('p', { className: 'mh-sg-date' }, 'Son Güncelleme ' + modifiedDate),
-                createElement('p', { className: 'mh-sg-author' }, authorName)
+                createElement(
+                    'div',
+                    { className: 'mh-sg-content' },
+                    createElement(
+                        'div',
+                        { className: 'mh-sg-meta' },
+                        createElement('p', { className: 'mh-sg-date' }, 'Son Güncelleme ' + modifiedDate),
+                        createElement('p', { className: 'mh-sg-author' }, authorName)
+                    ),
+                    bioText ? createElement('p', { className: 'mh-sg-bio' }, bioText) : null,
+                    infoBoxes.length ? createElement(
+                        'div',
+                        { className: 'mh-sg-info-list', 'aria-label': 'Bilgi kutucuklari' },
+                        infoBoxes.map(function (infoBox, index) {
+                            return createElement(
+                                'div',
+                                { className: 'mh-sg-info-box', key: 'info-' + index },
+                                infoBox.title ? createElement('span', { className: 'mh-sg-info-title' }, infoBox.title) : null,
+                                infoBox.text ? createElement('span', { className: 'mh-sg-info-text' }, infoBox.text) : null
+                            );
+                        })
+                    ) : null,
+                    actionButtons.length ? createElement(
+                        'div',
+                        { className: 'mh-sg-actions', 'aria-label': 'Baglantilar' },
+                        actionButtons.map(function (button, index) {
+                            return createElement(
+                                'a',
+                                {
+                                    className: 'mh-sg-action',
+                                    href: button.url || '#',
+                                    key: 'action-' + index,
+                                    onClick: preventEditorNavigation
+                                },
+                                createElement('span', { className: 'mh-sg-action-label' }, button.label || ''),
+                                createElement('span', { className: 'mh-sg-action-icon', 'aria-hidden': 'true' }, String.fromCharCode(8594))
+                            );
+                        })
+                    ) : null
+                )
             );
         },
         save: function () {

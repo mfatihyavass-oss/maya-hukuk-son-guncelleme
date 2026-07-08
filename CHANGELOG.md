@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.6.1 - 2026-07-07
+
+- Blok tasarimi koyu lacivert ve altin vurgulu stile guncellendi.
+- On yuz icin imleci takip eden vurgu efekti, buton hover hareketi, ok animasyonu ve tiklama geri bildirimi eklendi.
+- Varsayilan gradyan renkleri yeni stile uygun olarak guncellendi.
+
+## 1.6.0 - 2026-07-07
+
+- Global bio alani eklendi; bos birakildiginda blokta gizlenir.
+- Varsayilan `Hakkimizda` ve `Iletisim` butonlari eklendi.
+- Varsayilan `Baro` bilgi kutucugu eklendi.
+- Butonlar ve bilgi kutucuklari ayarlar ekranindan cogaltilabilir, duzenlenebilir veya tamamen kaldirilabilir hale getirildi.
+
 ## 1.5.2 - 2026-06-07
 
 - WordPress uyumluluk bilgisi 7.0 icin guncellendi.

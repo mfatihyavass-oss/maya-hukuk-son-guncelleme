@@ -10,6 +10,9 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 }
 
 delete_option('mh_sg_author_name');
+delete_option('mh_sg_bio_text');
+delete_option('mh_sg_action_buttons');
+delete_option('mh_sg_info_boxes');
 delete_option('mh_sg_text_color');
 delete_option('mh_sg_gradient_start');
 delete_option('mh_sg_gradient_end');

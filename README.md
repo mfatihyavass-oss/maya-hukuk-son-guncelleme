@@ -2,7 +2,7 @@
 
 WordPress Gutenberg editoru icin "Son Guncelleme" blogu ekler. Blok, yazinin son duzenlenme tarihini gosterir ve ayarlar ekranindan belirlenen yazar adini/renklerini kullanir.
 
-Guncel surum: `1.5.2`
+Guncel surum: `1.6.1`
 
 ## Ozellikler
 
@@ -15,6 +15,9 @@ Guncel surum: `1.5.2`
 - Son guncelleme tarihi en eski olan tum yayinlanmis yazilar/sayfalar icin ayri rapor ve editor linki
 - Her iki Baslangic raporu icin raporu silme dugmesi
 - Global yazar adi ayari
+- Bos birakilabilen global bio alani
+- Varsayilan Hakkimizda ve Iletisim butonlari; ayarlardan cogaltilabilir, degistirilebilir veya kaldirilabilir
+- Varsayilan Baro bilgi kutucugu; ayarlardan farkli bilgi kutulari eklenebilir veya tum kutular kaldirilabilir
 - Metin rengi ayari
 - Arka plan gradyan baslangic ve bitis rengi ayari
 - Hem editor onizlemesinde hem de canli sayfada ayni tasarim
@@ -27,7 +30,10 @@ maya-hukuk-son-guncelleme/
     dashboard.css
     dashboard.js
     editor.js
+    settings.css
+    settings.js
     style.css
+    view.js
   block.json
   maya-hukuk-son-guncelleme.php
   readme.txt
@@ -39,7 +45,7 @@ maya-hukuk-son-guncelleme/
 1. Depoyu indir.
 2. `maya-hukuk-son-guncelleme/` klasorunu `wp-content/plugins/` altina kopyala.
 3. WordPress yonetim panelinde **Eklentiler** ekranindan eklentiyi aktif et.
-4. **Ayarlar > Son Guncelleme Bloku** ekranindan yazar ve renk ayarlarini yap.
+4. **Ayarlar > Son Guncelleme Bloku** ekranindan yazar, bio, buton, bilgi kutusu ve renk ayarlarini yap.
 5. Yazida/sayfada blok eklerken **Maya Hukuk - Son Guncelleme** blogunu sec.
 
 Alternatif olarak kokteki `maya-hukuk-son-guncelleme.zip` dosyasini WordPress uzerinden yukleyebilirsin.
@@ -73,6 +79,8 @@ Alternatif olarak kokteki `maya-hukuk-son-guncelleme.zip` dosyasini WordPress uz
 - Yayin tarihi esleme: `maya-hukuk/son-guncelleme` blogu bulunan yayinlanmis icerikler kaydedilirken veya Baslangic ekranindaki `Tarihi esitle` dugmesiyle calisir
 - Baslangic ekrani kontrolu: AJAX ile manuel calisir, yetki ve nonce kontrolu yapar
 - Varsayilan yazar: `Av. Arb. M. Fatih Yavas`
+- Varsayilan butonlar: `Hakkimizda`, `Iletisim`
+- Varsayilan bilgi kutusu: `Baro`
 
 ## Lisans
 
