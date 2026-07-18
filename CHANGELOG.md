@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.7.2 - 2026-07-18
+
+- Bagimsiz guvenlik ve mantik incelemesinden gecmeyen 1.7.1 otomatik tarih kurtarma yaklasimi tamamen kaldirildi.
+- `_wp_old_date` kayitlarinin kesin ilk yayin tarihi olmadigi kabul edilerek varsayima dayali hicbir otomatik veri degisikligi yapilmamasi saglandi.
+- Eklentinin yonetici isteginde veya surum gecisinde `post_date` ve `post_date_gmt` alanlarini degistirmedigi regresyon testiyle dogrulandi.
+- 1.7.0'daki guvenli davranis korunur: ilk yayin tarihi degismez, blok yalnizca son duzenlenme tarihini gosterir.
+
+## 1.7.1 - 2026-07-18
+
+- Otomatik tarih kurtarma denemesi bagimsiz incelemede guvenli bulunmadigi icin yayinlanmadan geri cekildi.
+
+## 1.7.0 - 2026-07-18
+
+- SEO ve yapilandirilmis veri uyumu icin ilk yayin tarihini son duzenlenme tarihiyle otomatik esitleyen davranis kaldirildi.
+- `wp_insert_post_data` filtresi ve yayin tarihi esitleme AJAX islemi kaldirildi.
+- Baslangic ekranindaki yayin tarihi uyumsuzluk raporu ile `Tarihi esitle` dugmesi kaldirildi.
+- Blok, WordPress ilk yayin tarihini koruyarak son duzenlenme tarihini gostermeye devam eder.
+- Son guncelleme tarihi eski icerikleri listeleyen rapor korunmustur.
+
 ## 1.6.1 - 2026-07-07
 
 - Blok tasarimi koyu lacivert ve altin vurgulu stile guncellendi.

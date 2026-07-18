@@ -4,11 +4,11 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.6.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Gutenberg icin dinamik "Son Guncelleme" blogu. Blok ekli yayinlanmis icerik kaydedildiginde yayin tarihi de son duzenlenme tarihine cekilir; yazar adi, bio alani, butonlar, bilgi kutucuklari ve renkler merkezi ayardan yonetilir.
+Gutenberg icin dinamik "Son Guncelleme" blogu. Blok, yayin tarihini degistirmeden son duzenlenme tarihini gosterir; yazar adi, bio alani, butonlar, bilgi kutucuklari ve renkler merkezi ayardan yonetilir.
 
 == Description ==
 
@@ -39,13 +39,9 @@ Boylece tum iceriklerde tek tip, kurumsal bir gorunum elde edilir.
 
 Hayir. Tarih, sadece icerik editorunde kaydedildiginde/guncellendiginde degisir.
 
-= WordPress sag panelindeki yayin tarihi de degisir mi? =
+= WordPress sag panelindeki yayin tarihi degisir mi? =
 
-Evet. Bu blok ekli olan yayinlanmis yazi/sayfa kaydedildiginde yayin tarihi, son duzenlenme tarihine eslenir.
-
-= Eski yazilardaki uyumsuz tarihleri toplu gormek mumkun mu? =
-
-Evet. WordPress Baslangic ekranindaki `Son Guncelleme Tarih Kontrolu` kutusunda `Kontrol et` dugmesine basin. Eklenti yalnizca Son Guncelleme blogu bulunan ve yayin tarihi son guncelleme tarihiyle uyumsuz olan yayinlanmis yazilari/sayfalari listeler. Saat farki dikkate alinmaz. Yil farki olanlar en ustte, ay farki olanlar ortada, gun farki olanlar en altta gosterilir. Her kayit editor linkiyle acilabilir veya listedeki dugmeyle editor acilmadan eslenebilir.
+Hayir. Ilk yayin tarihi korunur; blok yalnizca son duzenlenme tarihini gosterir.
 
 = Guncel olmayan yazilari nasil gorurum? =
 
@@ -53,7 +49,7 @@ Baslangic ekranindaki `Guncel olmayanlari kontrol et` dugmesi Son Guncelleme blo
 
 = Raporlar temizlenebilir mi? =
 
-Evet. Her iki raporda da `Raporu sil` dugmesi vardir.
+Evet. Raporda `Raporu sil` dugmesi vardir.
 
 = Tarih manuel degistirilebilir mi? =
 
@@ -72,6 +68,23 @@ Evet. Ayarlar ekraninda buton veya bilgi kutusu satirlarini silebilir ya da bos 
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 1.7.2 =
+
+- Guvenilir bicimde kanitlanamayan eski yayin tarihlerini otomatik degistiren 1.7.1 kurtarma yaklasimi tamamen kaldirildi.
+- Eklenti hicbir otomatik gecis, yonetici istegi veya AJAX islemiyle yayin tarihini degistirmez.
+- Ilk yayin tarihi korunur; blok yalnizca son duzenlenme tarihini gosterir.
+
+= 1.7.1 =
+
+- Guvenlik incelemesinde `_wp_old_date` kayitlarinin kesin ilk yayin tarihi olmadigi belirlendigi icin bu surum geri cekilmistir.
+
+= 1.7.0 =
+
+- Ilk yayin tarihini son duzenlenme tarihiyle otomatik degistiren davranis kaldirildi.
+- Yayin tarihi esitleme raporu, AJAX islemi ve `Tarihi esitle` dugmesi kaldirildi.
+- Blok, yayin tarihini koruyarak yalnizca son duzenlenme tarihini gostermeye devam eder.
+- Guncel olmayan yazilar raporu korunmustur.
 
 = 1.6.1 =
 

@@ -16,3 +16,4 @@ delete_option('mh_sg_info_boxes');
 delete_option('mh_sg_text_color');
 delete_option('mh_sg_gradient_start');
 delete_option('mh_sg_gradient_end');
+
