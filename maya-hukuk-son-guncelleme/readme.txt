@@ -4,11 +4,11 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.7.2
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Gutenberg icin dinamik "Son Guncelleme" blogu. Blok, yayin tarihini degistirmeden son duzenlenme tarihini gosterir; yazar adi, bio alani, butonlar, bilgi kutucuklari ve renkler merkezi ayardan yonetilir.
+Gutenberg icin dinamik "Son Guncelleme" ve yazar karti. Yayin tarihini degistirmeden son duzenlenme tarihini gosterir; yazar, fotograf, butonlar, paylasim, yasal uyari ve tema merkezi ayardan yonetilir.
 
 == Description ==
 
@@ -16,13 +16,16 @@ Maya Hukuk Son Guncelleme Bloku, sayfa ve yazilarinizda tek tikla standart bir s
 
 Blok, ilgili yazi/sayfanin son duzenlenme tarihini gosterir ve asagidaki global ayarlari kullanir:
 
-- Yazar adi
+- Yazar adi, unvan, profil baglantisi ve fotograf
 - Bio alani
-- Hakkimizda ve Iletisim varsayilan butonlari
-- Baro varsayilan bilgi kutucugu
-- Metin rengi
-- Gradyan baslangic rengi
-- Gradyan bitis rengi
+- Simgeli butonlar (telefon, e-posta, WhatsApp, harita algilama)
+- Bilgi kutulari
+- Paylasim ve baglanti kopyalama
+- Yasal uyari
+- Dort tema (varsayilan: site renklerine uygun Lila) ve renk ayarlari
+- Yayin tarihi ve okuma suresi rozetleri
+- Otomatik ekleme ve kisa kod
+- Yazi listesinde guncellik sutunu ve Baslangic ekrani raporlari
 
 Boylece tum iceriklerde tek tip, kurumsal bir gorunum elde edilir.
 
@@ -55,9 +58,13 @@ Evet. Raporda `Raporu sil` dugmesi vardir.
 
 Bu surumde blokta manuel tarih alani yoktur. Tarih, yazi/sayfanin son duzenlenme tarihinden gelir.
 
-= Her blokta ayri renk kullanabilir miyim? =
+= Her blokta ayri gorunum kullanabilir miyim? =
 
-Bu surumde renkler globaldir. Ayarlar ekraninda yaptiginiz degisiklik tum bloklara yansir.
+Evet. Blok ayarlarindan o karta ozel tema secebilir ve bolumleri gizleyebilirsiniz. Renkler ve icerik genel ayardan gelir.
+
+= Blogu tum yazilara tek tek eklemem gerekir mi? =
+
+Hayir. Ayarlar ekranindaki `Karti otomatik ekle` seceneginden icerik turlerini secerseniz blogu olmayan yazilarin sonuna kart otomatik eklenir. Blogu zaten iceren yazilarda iki kez gosterilmez.
 
 = Varsayilan butonlari veya Baro kutusunu kaldirabilir miyim? =
 
@@ -68,6 +75,15 @@ Evet. Ayarlar ekraninda buton veya bilgi kutusu satirlarini silebilir ya da bos 
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 2.0.0 =
+
+- Kart bastan tasarlandi; site renklerine uygun varsayilan Lila tema dahil dort tema, yazar fotografi, unvan, simgeli tarih rozetleri.
+- Paylasim, baglanti kopyalama, yasal uyari, okuma suresi ve yayin tarihi rozeti eklendi.
+- Blok bazinda tema ve bolum gizleme; otomatik ekleme ve kisa kod.
+- Canli onizlemeli yeni ayarlar sayfasi.
+- Yazi listesinde guncellik sutunu; Baslangic raporunda ozet, sure filtresi ve karti eksik icerikler raporu.
+- Renk turetme, editor/on yuz farki, baglamsiz tarih, erisilebilirlik, rapor performansi ve onbellek sorunlari duzeltildi.
 
 = 1.7.2 =
 
