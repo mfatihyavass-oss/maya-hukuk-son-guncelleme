@@ -92,7 +92,8 @@
     blocks.registerBlockType('maya-hukuk/son-guncelleme', {
         edit: function (props) {
             var post = useEditedPost(props.context);
-            var blockProps = useBlockProps({ className: 'mh-sg-editor-wrapper' });
+            var widthClass = props.attributes.align ? '' : ' mh-sg-editor-width-' + (settings.globalWidth || 'wide');
+            var blockProps = useBlockProps({ className: 'mh-sg-editor-wrapper' + widthClass });
 
             return createElement(
                 Fragment,

@@ -977,3 +977,58 @@ a.mh-sg-author:focus-visible {
         display: none !important;
     }
 }
+
+/* ==========================================================================
+   Ayarlardan seçilen buton yazı renkleri (tüm temalarda temanın önüne geçer)
+   ========================================================================== */
+
+.mh-sg-block.has-button-text-color .mh-sg-action.is-primary,
+.mh-sg-block.has-button-text-color .mh-sg-action.is-primary:visited,
+.mh-sg-block.has-button-text-color .mh-sg-action.is-primary:hover,
+.mh-sg-block.has-button-text-color .mh-sg-action.is-primary:focus-visible {
+    color: var(--mh-sg-c-button-text) !important;
+}
+
+.mh-sg-block.has-button2-text-color .mh-sg-action.is-secondary,
+.mh-sg-block.has-button2-text-color .mh-sg-action.is-secondary:visited,
+.mh-sg-block.has-button2-text-color .mh-sg-action.is-secondary:hover,
+.mh-sg-block.has-button2-text-color .mh-sg-action.is-secondary:focus-visible {
+    color: var(--mh-sg-c-button2-text) !important;
+}
+
+/* ==========================================================================
+   Kart genişliği (Ayarlar > Görünüm > Kart genişliği)
+   Blok temaları yazı içindeki blokları içerik genişliğine (ör. 645 px) daraltır.
+   Çift sınıf, temanın .is-layout-constrained kuralının önüne geçer.
+   ========================================================================== */
+
+.mh-sg-block.mh-sg-width-wide,
+.mh-sg-editor-wrapper.mh-sg-editor-width-wide {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: min(var(--mh-sg-wide-size, 1200px), 100%) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.mh-sg-block.mh-sg-width-full,
+.mh-sg-editor-wrapper.mh-sg-editor-width-full {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.mh-sg-editor-wrapper .mh-sg-block.mh-sg-width-wide,
+.mh-sg-editor-wrapper .mh-sg-block.mh-sg-width-full {
+    max-width: 100% !important;
+}
+
+/* Geniş kartta bio satırları ekranı doldursun */
+.mh-sg-width-wide .mh-sg-bio,
+.mh-sg-width-full .mh-sg-bio,
+.mh-sg-block.alignwide .mh-sg-bio,
+.mh-sg-block.alignfull .mh-sg-bio {
+    max-width: none;
+}

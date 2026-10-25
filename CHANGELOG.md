@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.2.0 - 2026-10-25
+
+- Duzeltme: blok temalari yazi icindeki bloklari icerik genisligine (or. 645 px) daralttigi icin kart genis ekranda dar aciliyordu.
+- Ayarlar > Gorunum'e `Kart genisligi` eklendi: `Genis` (varsayilan, en fazla 1200 px, ana sayfa bolumleriyle ayni), `Yazi metni kadar`, `Kapsayicinin tamami`.
+- Blok hizalamasi (genis/tam) secildiginde genel ayar devre disi kalir; editor onizlemesi de ayni genisligi kullanir.
+- Genis kartta bio metni satir sinirina takilmadan yayilir.
+
+## 2.1.0 - 2026-10-25
+
+- Ayarlar > Butonlar bolumune `Ilk buton yazi rengi` ve `Diger butonlarin yazi rengi` secenekleri eklendi.
+- `Ozel renk kullan` isaretlenmezse renk temaya gore otomatik belirlenir; renk secildiginde kutu kendiliginden isaretlenir ve canli onizleme guncellenir.
+- Secilen renkler tum temalarda ve fare ustune gelindiginde de korunur.
+- Kaldirmada yeni ayarlar da temizlenir.
+
 ## 2.0.0 - 2026-10-25
 
 ### Yeni tasarım
