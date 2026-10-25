@@ -1079,9 +1079,9 @@ a.mh-sg-author:focus-visible {
 }
 
 .mh-sg-block.has-c-box-border .mh-sg-info-box {
-    border-top-color: var(--mh-sg-c-box-border) !important;
-    border-right-color: var(--mh-sg-c-box-border) !important;
-    border-bottom-color: var(--mh-sg-c-box-border) !important;
+    border-top: 1px solid var(--mh-sg-c-box-border) !important;
+    border-right: 1px solid var(--mh-sg-c-box-border) !important;
+    border-bottom: 1px solid var(--mh-sg-c-box-border) !important;
 }
 
 .mh-sg-block.has-c-box-stripe .mh-sg-info-box {
