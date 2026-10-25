@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Güncelleme Bloku
  * Description:       Gutenberg için dinamik yazar ve son güncelleme kartı: yazar fotoğrafı, unvan, bio, tarih rozetleri, okuma süresi, butonlar, bilgi kutuları, paylaşım, yasal uyarı, otomatik ekleme ve güncellik raporları.
- * Version:           2.2.0
+ * Version:           2.4.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Maya Hukuk
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Maya_Hukuk_Son_Guncelleme {
-    const VERSION = '2.2.0';
+    const VERSION = '2.4.0';
     const BLOCK_NAME = 'maya-hukuk/son-guncelleme';
     const SHORTCODE = 'maya_son_guncelleme';
     const DASHBOARD_NONCE_ACTION = 'mh_sg_dashboard_date_audit';
@@ -35,6 +35,7 @@ final class Maya_Hukuk_Son_Guncelleme {
     const OPTION_THEME = 'mh_sg_theme';
     const OPTION_DATE_STYLE = 'mh_sg_date_style';
     const OPTION_WIDTH = 'mh_sg_width';
+    const OPTION_AVATAR_STYLE = 'mh_sg_avatar_style';
     const OPTION_FEATURES = 'mh_sg_features';
     const OPTION_TEXT_COLOR = 'mh_sg_text_color';
     const OPTION_GRADIENT_START = 'mh_sg_gradient_start';
@@ -56,6 +57,36 @@ final class Maya_Hukuk_Son_Guncelleme {
     const DEFAULT_ACCENT_COLOR = '#5B3A91';
     const DEFAULT_THEME = 'lila';
     const DEFAULT_WIDTH = 'wide';
+    const DEFAULT_AVATAR_STYLE = 'theme';
+
+    const AVATAR_STYLES = array(
+        'theme' => 'Temaya göre',
+        'box' => 'Kutu içinde',
+        'plain' => 'Çerçevesiz',
+        'circle' => 'Yuvarlak',
+    );
+
+    /**
+     * Optional colors that work in every theme. Empty value = theme color.
+     * key => array(option name, label, color shown in the picker by default).
+     */
+    const CUSTOM_COLORS = array(
+        'card-bg' => array('mh_sg_card_bg_color', 'Kart zemini', '#FCFAFF'),
+        'card-border' => array('mh_sg_card_border_color', 'Kart çerçevesi', '#E8DFF2'),
+        'name' => array('mh_sg_name_color', 'Yazar adı', '#3F286E'),
+        'heading' => array('mh_sg_heading_color', 'Başlık metni (Yazar etiketi, unvan, kutu başlıkları)', '#795B9D'),
+        'body' => array('mh_sg_body_color', 'Gövde metni (bio, yasal uyarı)', '#655D70'),
+        'avatar-frame' => array('mh_sg_avatar_frame_color', 'Fotoğraf kutusu', '#ECE2F4'),
+        'badge-bg' => array('mh_sg_badge_bg_color', 'Tarih rozeti zemini', '#ECE2F4'),
+        'badge-text' => array('mh_sg_badge_text_color', 'Tarih rozeti yazısı', '#5B3A91'),
+        'box-bg' => array('mh_sg_box_bg_color', 'Kutu zemini', '#FFFFFF'),
+        'box-border' => array('mh_sg_box_border_color', 'Kutu çerçevesi', '#E8DFF2'),
+        'box-stripe' => array('mh_sg_box_stripe_color', 'Kutu sol şeridi', '#B69BCE'),
+        'box-title' => array('mh_sg_box_title_color', 'Kutu başlığı', '#795B9D'),
+        'box-text' => array('mh_sg_box_text_color', 'Kutu metni', '#3F286E'),
+        'button-bg' => array('mh_sg_button_bg_color', 'İlk buton zemini', '#5B3A91'),
+        'button2-bg' => array('mh_sg_button2_bg_color', 'Diğer butonların zemini', '#F5EFFA'),
+    );
 
     const WIDTHS = array(
         'wide' => 'Geniş — sitedeki bölümlerle aynı (en fazla 1200 px)',
@@ -154,7 +185,13 @@ final class Maya_Hukuk_Son_Guncelleme {
     }
 
     public static function get_option_names() {
-        return array(
+        $custom_color_options = array();
+
+        foreach (self::CUSTOM_COLORS as $color) {
+            $custom_color_options[] = $color[0];
+        }
+
+        return array_merge($custom_color_options, array(
             self::OPTION_AUTHOR,
             self::OPTION_AUTHOR_TITLE,
             self::OPTION_AUTHOR_URL,
@@ -166,6 +203,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_THEME,
             self::OPTION_DATE_STYLE,
             self::OPTION_WIDTH,
+            self::OPTION_AVATAR_STYLE,
             self::OPTION_FEATURES,
             self::OPTION_TEXT_COLOR,
             self::OPTION_GRADIENT_START,
@@ -175,7 +213,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_BUTTON2_TEXT_COLOR,
             self::OPTION_AUTO_INSERT,
             self::OPTION_STALE_MONTHS,
-        );
+        ));
     }
 
     /* ------------------------------------------------------------------
@@ -338,6 +376,10 @@ final class Maya_Hukuk_Son_Guncelleme {
             $classes[] = 'mh-sg-width-' . $s['width'];
         }
 
+        if ($s['avatar_style'] !== 'theme') {
+            $classes[] = 'mh-sg-avatar-' . $s['avatar_style'];
+        }
+
         if ($show['avatar']) {
             $classes[] = 'has-avatar';
         }
@@ -363,6 +405,13 @@ final class Maya_Hukuk_Son_Guncelleme {
         if ($s['button2_text_color'] !== '') {
             $classes[] = 'has-button2-text-color';
             $styles .= '--mh-sg-c-button2-text:' . $s['button2_text_color'] . ';';
+        }
+
+        foreach ($s['custom_colors'] as $color_key => $color_value) {
+            if ($color_value !== '') {
+                $classes[] = 'has-c-' . $color_key;
+                $styles .= '--mh-sg-c-' . $color_key . ':' . $color_value . ';';
+            }
         }
 
         if ($options['use_wrapper']) {
@@ -697,6 +746,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_THEME => array('string', 'sanitize_theme', self::DEFAULT_THEME),
             self::OPTION_DATE_STYLE => array('string', 'sanitize_date_style', 'long'),
             self::OPTION_WIDTH => array('string', 'sanitize_width', self::DEFAULT_WIDTH),
+            self::OPTION_AVATAR_STYLE => array('string', 'sanitize_avatar_style', self::DEFAULT_AVATAR_STYLE),
             self::OPTION_FEATURES => array('array', 'sanitize_features', self::DEFAULT_FEATURES),
             self::OPTION_TEXT_COLOR => array('string', 'sanitize_text_color', self::DEFAULT_TEXT_COLOR),
             self::OPTION_GRADIENT_START => array('string', 'sanitize_gradient_start_color', self::DEFAULT_GRADIENT_START),
@@ -707,6 +757,10 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_AUTO_INSERT => array('array', 'sanitize_auto_insert', array()),
             self::OPTION_STALE_MONTHS => array('integer', 'sanitize_stale_months', self::DEFAULT_STALE_MONTHS),
         );
+
+        foreach (self::CUSTOM_COLORS as $color) {
+            $settings[$color[0]] = array('string', 'sanitize_optional_color', '');
+        }
 
         foreach ($settings as $option_name => $config) {
             register_setting(self::SETTINGS_GROUP, $option_name, array(
@@ -733,7 +787,14 @@ final class Maya_Hukuk_Son_Guncelleme {
             return $value === false ? $default : $value;
         };
 
+        $custom_colors = array();
+
+        foreach (self::CUSTOM_COLORS as $color_key => $color) {
+            $custom_colors[$color_key] = $this->sanitize_optional_color($read($color[0], ''));
+        }
+
         return array(
+            'custom_colors' => $custom_colors,
             'author' => $this->sanitize_author_name($read(self::OPTION_AUTHOR, self::DEFAULT_AUTHOR)),
             'author_title' => $this->sanitize_plain_text($read(self::OPTION_AUTHOR_TITLE, self::DEFAULT_AUTHOR_TITLE)),
             'author_url' => $this->sanitize_url_value($read(self::OPTION_AUTHOR_URL, '')),
@@ -745,6 +806,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             'theme' => $this->sanitize_theme($read(self::OPTION_THEME, self::DEFAULT_THEME)),
             'date_style' => $this->sanitize_date_style($read(self::OPTION_DATE_STYLE, 'long')),
             'width' => $this->sanitize_width($read(self::OPTION_WIDTH, self::DEFAULT_WIDTH)),
+            'avatar_style' => $this->sanitize_avatar_style($read(self::OPTION_AVATAR_STYLE, self::DEFAULT_AVATAR_STYLE)),
             'features' => $this->sanitize_features($read(self::OPTION_FEATURES, self::DEFAULT_FEATURES)),
             'text_color' => $this->sanitize_text_color($read(self::OPTION_TEXT_COLOR, self::DEFAULT_TEXT_COLOR)),
             'gradient_start' => $this->sanitize_gradient_start_color($read(self::OPTION_GRADIENT_START, self::DEFAULT_GRADIENT_START)),
@@ -848,6 +910,10 @@ final class Maya_Hukuk_Son_Guncelleme {
 
     public function sanitize_theme($value) {
         return is_string($value) && isset(self::THEMES[$value]) ? $value : self::DEFAULT_THEME;
+    }
+
+    public function sanitize_avatar_style($value) {
+        return is_string($value) && isset(self::AVATAR_STYLES[$value]) ? $value : self::DEFAULT_AVATAR_STYLE;
     }
 
     public function sanitize_width($value) {
@@ -1127,6 +1193,20 @@ final class Maya_Hukuk_Son_Guncelleme {
                         </div>
 
                         <div class="mh-sg-field">
+                            <span class="mh-sg-label">Fotoğraf görünümü</span>
+                            <div class="mh-sg-avatar-style-choices">
+                                <?php foreach (self::AVATAR_STYLES as $style_key => $style_label) : ?>
+                                    <label class="mh-sg-avatar-style-choice is-<?php echo esc_attr($style_key); ?>">
+                                        <input type="radio" name="<?php echo esc_attr(self::OPTION_AVATAR_STYLE); ?>" value="<?php echo esc_attr($style_key); ?>" <?php checked($s['avatar_style'], $style_key); ?> />
+                                        <span class="mh-sg-avatar-style-swatch" aria-hidden="true"></span>
+                                        <span><?php echo esc_html($style_label); ?></span>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                            <p class="description">"Kutu içinde" fotoğrafı ana sayfanızdaki portre gibi lila bir çerçeveye yerleştirir. Çerçeve rengini "Kart ve kutu renkleri" bölümünden değiştirebilirsiniz.</p>
+                        </div>
+
+                        <div class="mh-sg-field">
                             <label class="mh-sg-label" for="<?php echo esc_attr(self::OPTION_BIO); ?>">Bio</label>
                             <textarea id="<?php echo esc_attr(self::OPTION_BIO); ?>" name="<?php echo esc_attr(self::OPTION_BIO); ?>" class="large-text" rows="3"><?php echo esc_textarea($s['bio']); ?></textarea>
                             <p class="description">Boş bırakırsanız kartta gösterilmez.</p>
@@ -1180,6 +1260,20 @@ final class Maya_Hukuk_Son_Guncelleme {
                             <?php $this->render_color_field(self::OPTION_GRADIENT_START, 'Gradyan başlangıç', $s['gradient_start'], 'Lacivert tema'); ?>
                             <?php $this->render_color_field(self::OPTION_GRADIENT_END, 'Gradyan bitiş', $s['gradient_end'], 'Lacivert tema'); ?>
                         </div>
+                    </section>
+
+                    <section class="mh-sg-card">
+                        <h2>Kart ve kutu renkleri</h2>
+                        <p class="description">Bu renkler tüm temalarda çalışır. Bir rengi değiştirdiğinizde "Özel renk kullan" kendiliğinden işaretlenir; işareti kaldırırsanız temanın rengine döner.</p>
+                        <div class="mh-sg-field-grid is-colors">
+                            <?php foreach (self::CUSTOM_COLORS as $color_key => $color) : ?>
+                                <?php $this->render_optional_color_field($color[0], $color[1], $s['custom_colors'][$color_key], $color[2]); ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+
+                    <section class="mh-sg-card">
+                        <h2>Yerleşim</h2>
 
                         <div class="mh-sg-field">
                             <span class="mh-sg-label">Kart genişliği</span>
