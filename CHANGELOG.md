@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.3.0 - 2026-10-25
+
+- Lila ve diger temalarda kutu ve kart renkleri secilemiyordu (eski metin/gradyan ayarlari yalnizca Lacivert temada calisiyordu).
+- Ayarlara tum temalarda calisan `Kart ve kutu renkleri` bolumu eklendi: kart zemini, kart cercevesi, yazar adi, bio ve yasal uyari metni, tarih rozeti zemini ve yazisi, kutu zemini, kutu cercevesi, kutu sol seridi, kutu basligi, kutu metni, ilk buton zemini ve diger butonlarin zemini.
+- Her renk `Ozel renk kullan` ile acilir; isaret kaldirilinca temanin rengine donulur. Canli onizleme aninda guncellenir.
+- Gorunum ayarlari `Gorunum`, `Kart ve kutu renkleri` ve `Yerlesim` bolumlerine ayrildi.
+
 ## 2.2.0 - 2026-10-25
 
 - Duzeltme: blok temalari yazi icindeki bloklari icerik genisligine (or. 645 px) daralttigi icin kart genis ekranda dar aciliyordu.

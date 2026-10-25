@@ -1032,3 +1032,87 @@ a.mh-sg-author:focus-visible {
 .mh-sg-block.alignfull .mh-sg-bio {
     max-width: none;
 }
+
+/* ==========================================================================
+   Ayarlar > Kart ve kutu renkleri (tüm temalarda temanın önüne geçer)
+   ========================================================================== */
+
+.mh-sg-block.has-c-card-bg {
+    background: var(--mh-sg-c-card-bg) !important;
+}
+
+.mh-sg-block.has-c-card-border {
+    border: 1px solid var(--mh-sg-c-card-border) !important;
+}
+
+.mh-sg-block.mh-sg-theme-minimal.has-c-card-border {
+    border-right: 0 !important;
+    border-left: 0 !important;
+}
+
+.mh-sg-block.has-c-card-border .mh-sg-footer {
+    border-top-color: var(--mh-sg-c-card-border);
+}
+
+.mh-sg-block.has-c-name .mh-sg-author,
+.mh-sg-block.has-c-name .mh-sg-author:visited,
+.mh-sg-block.has-c-name a.mh-sg-author:hover {
+    color: var(--mh-sg-c-name) !important;
+}
+
+.mh-sg-block.has-c-body .mh-sg-bio,
+.mh-sg-block.has-c-body .mh-sg-disclaimer {
+    color: var(--mh-sg-c-body) !important;
+}
+
+.mh-sg-block.has-c-badge-bg .mh-sg-badge.is-updated {
+    border-color: var(--mh-sg-c-badge-bg) !important;
+    background: var(--mh-sg-c-badge-bg) !important;
+}
+
+.mh-sg-block.has-c-badge-text .mh-sg-badge.is-updated {
+    color: var(--mh-sg-c-badge-text) !important;
+}
+
+.mh-sg-block.has-c-box-bg .mh-sg-info-box {
+    background: var(--mh-sg-c-box-bg) !important;
+}
+
+.mh-sg-block.has-c-box-border .mh-sg-info-box {
+    border-top-color: var(--mh-sg-c-box-border) !important;
+    border-right-color: var(--mh-sg-c-box-border) !important;
+    border-bottom-color: var(--mh-sg-c-box-border) !important;
+}
+
+.mh-sg-block.has-c-box-stripe .mh-sg-info-box {
+    border-left-color: var(--mh-sg-c-box-stripe) !important;
+}
+
+.mh-sg-block.has-c-box-title .mh-sg-info-title {
+    color: var(--mh-sg-c-box-title) !important;
+}
+
+.mh-sg-block.has-c-box-text .mh-sg-info-text {
+    color: var(--mh-sg-c-box-text) !important;
+}
+
+.mh-sg-block.has-c-button-bg .mh-sg-action.is-primary,
+.mh-sg-block.has-c-button-bg .mh-sg-action.is-primary:visited {
+    border-color: var(--mh-sg-c-button-bg) !important;
+    background: var(--mh-sg-c-button-bg) !important;
+}
+
+.mh-sg-block.has-c-button-bg .mh-sg-action.is-primary:hover,
+.mh-sg-block.has-c-button-bg .mh-sg-action.is-primary:focus-visible {
+    filter: brightness(0.9);
+}
+
+.mh-sg-block.has-c-button2-bg .mh-sg-action.is-secondary,
+.mh-sg-block.has-c-button2-bg .mh-sg-action.is-secondary:visited {
+    background: var(--mh-sg-c-button2-bg) !important;
+}
+
+.mh-sg-block.has-c-button2-bg .mh-sg-action.is-secondary:hover,
+.mh-sg-block.has-c-button2-bg .mh-sg-action.is-secondary:focus-visible {
+    filter: brightness(0.96);
+}

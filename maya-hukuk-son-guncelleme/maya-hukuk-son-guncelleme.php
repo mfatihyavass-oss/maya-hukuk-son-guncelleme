@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Güncelleme Bloku
  * Description:       Gutenberg için dinamik yazar ve son güncelleme kartı: yazar fotoğrafı, unvan, bio, tarih rozetleri, okuma süresi, butonlar, bilgi kutuları, paylaşım, yasal uyarı, otomatik ekleme ve güncellik raporları.
- * Version:           2.2.0
+ * Version:           2.3.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Maya Hukuk
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Maya_Hukuk_Son_Guncelleme {
-    const VERSION = '2.2.0';
+    const VERSION = '2.3.0';
     const BLOCK_NAME = 'maya-hukuk/son-guncelleme';
     const SHORTCODE = 'maya_son_guncelleme';
     const DASHBOARD_NONCE_ACTION = 'mh_sg_dashboard_date_audit';
@@ -56,6 +56,26 @@ final class Maya_Hukuk_Son_Guncelleme {
     const DEFAULT_ACCENT_COLOR = '#5B3A91';
     const DEFAULT_THEME = 'lila';
     const DEFAULT_WIDTH = 'wide';
+
+    /**
+     * Optional colors that work in every theme. Empty value = theme color.
+     * key => array(option name, label, color shown in the picker by default).
+     */
+    const CUSTOM_COLORS = array(
+        'card-bg' => array('mh_sg_card_bg_color', 'Kart zemini', '#FCFAFF'),
+        'card-border' => array('mh_sg_card_border_color', 'Kart çerçevesi', '#E8DFF2'),
+        'name' => array('mh_sg_name_color', 'Yazar adı', '#3F286E'),
+        'body' => array('mh_sg_body_color', 'Bio ve yasal uyarı metni', '#655D70'),
+        'badge-bg' => array('mh_sg_badge_bg_color', 'Tarih rozeti zemini', '#ECE2F4'),
+        'badge-text' => array('mh_sg_badge_text_color', 'Tarih rozeti yazısı', '#5B3A91'),
+        'box-bg' => array('mh_sg_box_bg_color', 'Kutu zemini', '#FFFFFF'),
+        'box-border' => array('mh_sg_box_border_color', 'Kutu çerçevesi', '#E8DFF2'),
+        'box-stripe' => array('mh_sg_box_stripe_color', 'Kutu sol şeridi', '#B69BCE'),
+        'box-title' => array('mh_sg_box_title_color', 'Kutu başlığı', '#795B9D'),
+        'box-text' => array('mh_sg_box_text_color', 'Kutu metni', '#3F286E'),
+        'button-bg' => array('mh_sg_button_bg_color', 'İlk buton zemini', '#5B3A91'),
+        'button2-bg' => array('mh_sg_button2_bg_color', 'Diğer butonların zemini', '#F5EFFA'),
+    );
 
     const WIDTHS = array(
         'wide' => 'Geniş — sitedeki bölümlerle aynı (en fazla 1200 px)',
@@ -154,7 +174,13 @@ final class Maya_Hukuk_Son_Guncelleme {
     }
 
     public static function get_option_names() {
-        return array(
+        $custom_color_options = array();
+
+        foreach (self::CUSTOM_COLORS as $color) {
+            $custom_color_options[] = $color[0];
+        }
+
+        return array_merge($custom_color_options, array(
             self::OPTION_AUTHOR,
             self::OPTION_AUTHOR_TITLE,
             self::OPTION_AUTHOR_URL,
@@ -175,7 +201,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_BUTTON2_TEXT_COLOR,
             self::OPTION_AUTO_INSERT,
             self::OPTION_STALE_MONTHS,
-        );
+        ));
     }
 
     /* ------------------------------------------------------------------
@@ -363,6 +389,13 @@ final class Maya_Hukuk_Son_Guncelleme {
         if ($s['button2_text_color'] !== '') {
             $classes[] = 'has-button2-text-color';
             $styles .= '--mh-sg-c-button2-text:' . $s['button2_text_color'] . ';';
+        }
+
+        foreach ($s['custom_colors'] as $color_key => $color_value) {
+            if ($color_value !== '') {
+                $classes[] = 'has-c-' . $color_key;
+                $styles .= '--mh-sg-c-' . $color_key . ':' . $color_value . ';';
+            }
         }
 
         if ($options['use_wrapper']) {
@@ -708,6 +741,10 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_STALE_MONTHS => array('integer', 'sanitize_stale_months', self::DEFAULT_STALE_MONTHS),
         );
 
+        foreach (self::CUSTOM_COLORS as $color) {
+            $settings[$color[0]] = array('string', 'sanitize_optional_color', '');
+        }
+
         foreach ($settings as $option_name => $config) {
             register_setting(self::SETTINGS_GROUP, $option_name, array(
                 'type' => $config[0],
@@ -733,7 +770,14 @@ final class Maya_Hukuk_Son_Guncelleme {
             return $value === false ? $default : $value;
         };
 
+        $custom_colors = array();
+
+        foreach (self::CUSTOM_COLORS as $color_key => $color) {
+            $custom_colors[$color_key] = $this->sanitize_optional_color($read($color[0], ''));
+        }
+
         return array(
+            'custom_colors' => $custom_colors,
             'author' => $this->sanitize_author_name($read(self::OPTION_AUTHOR, self::DEFAULT_AUTHOR)),
             'author_title' => $this->sanitize_plain_text($read(self::OPTION_AUTHOR_TITLE, self::DEFAULT_AUTHOR_TITLE)),
             'author_url' => $this->sanitize_url_value($read(self::OPTION_AUTHOR_URL, '')),
@@ -1180,6 +1224,20 @@ final class Maya_Hukuk_Son_Guncelleme {
                             <?php $this->render_color_field(self::OPTION_GRADIENT_START, 'Gradyan başlangıç', $s['gradient_start'], 'Lacivert tema'); ?>
                             <?php $this->render_color_field(self::OPTION_GRADIENT_END, 'Gradyan bitiş', $s['gradient_end'], 'Lacivert tema'); ?>
                         </div>
+                    </section>
+
+                    <section class="mh-sg-card">
+                        <h2>Kart ve kutu renkleri</h2>
+                        <p class="description">Bu renkler tüm temalarda çalışır. Bir rengi değiştirdiğinizde "Özel renk kullan" kendiliğinden işaretlenir; işareti kaldırırsanız temanın rengine döner.</p>
+                        <div class="mh-sg-field-grid is-colors">
+                            <?php foreach (self::CUSTOM_COLORS as $color_key => $color) : ?>
+                                <?php $this->render_optional_color_field($color[0], $color[1], $s['custom_colors'][$color_key], $color[2]); ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+
+                    <section class="mh-sg-card">
+                        <h2>Yerleşim</h2>
 
                         <div class="mh-sg-field">
                             <span class="mh-sg-label">Kart genişliği</span>

@@ -4,7 +4,7 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,10 @@ Evet. Ayarlar ekraninda buton veya bilgi kutusu satirlarini silebilir ya da bos 
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 2.3.0 =
+
+- Ayarlara tum temalarda calisan `Kart ve kutu renkleri` bolumu eklendi: kart zemini ve cercevesi, yazar adi, metin, tarih rozeti, kutu zemini/cercevesi/sol seridi/basligi/metni ve buton zeminleri.
 
 = 2.2.0 =
 
