@@ -1,5 +1,39 @@
 # Changelog
 
+## 2.0.0 - 2026-10-25
+
+### Yeni tasarım
+- Kart bastan tasarlandi: altin ust cizgi, terazi filigrani, yazar fotografi veya bas harf rozeti, unvan satiri, simgeli tarih rozetleri, sol vurgulu bilgi kutulari.
+- Uc tema: `Lacivert & Altin` (varsayilan), `Acik kart` ve `Minimal cizgi`. Tema genel ayardan veya her blokta ayri secilebilir.
+- Ilk buton vurgulu, digerleri ikincil gorunur; `tel:`, `mailto:`, WhatsApp ve Google Haritalar baglantilarina otomatik simge eklenir; istege bagli yeni sekmede acma.
+- Mobilde butonlar tam genislik, bilgi kutulari iki sutun; yazdirma gorunumu eklendi.
+
+### Yeni ozellikler
+- Yazar fotografi (ortam kutuphanesinden), unvan ve yazar profil baglantisi.
+- Yayin tarihi rozeti (guncelleme tarihinden farkliysa) ve okuma suresi rozeti.
+- Paylasim dugmeleri (WhatsApp, LinkedIn, X, Facebook) ve baglanti kopyalama.
+- Yasal uyari metni (hukuki danismanlik niteligi tasimaz notu).
+- Uzun Turkce tarih bicimi (`25 Ekim 2026`) veya sayisal bicim (`25.10.2026`).
+- Blok ayarlarindan bu karttaki temayi secme ve bolumleri (tarih, bio, bilgi kutulari, butonlar, paylasim, yasal uyari) gizleme.
+- Secilen icerik turlerinde blogu olmayan yazilara karti otomatik ekleme ve `[maya_son_guncelleme]` kisa kodu (`tema` ve `gizle` parametreleriyle).
+- Ayarlar sayfasi yeniden duzenlendi: bolumlu kartlar, siz yazdikca guncellenen canli onizleme, satirlari yukari/asagi tasima, kaydedilmemis degisiklik uyarisi.
+- Yazi ve sayfa listelerine siralanabilir `Son guncelleme` sutunu: renkli guncellik etiketi ve `Kart yok` uyarisi.
+- Baslangic ekrani raporu: ozet sayilar, sure filtresi (6 ay / esik / 24 ay / tumu), `Karti eksik icerikler` raporu, `Gor` baglantisi.
+- Eklentiler listesine `Ayarlar` baglantisi.
+
+### Duzeltilen sorunlar
+- Editor onizlemesi artik canli sayfayla ayni sunucu ciktisini kullanir; iki ayri sablonun birbirinden kaymasi engellendi.
+- Metin rengi degistirildiginde bio, bilgi kutusu ve tarih metinleri beyaz kalip okunmaz hale geliyordu; tum ikincil renkler artik secilen renklerden turetilir.
+- Gradyan renkleri degistirildiginde orta ton sabit lacivert kaliyordu; orta ton artik secilen iki renkten hesaplanir.
+- Yazi baglami olmayan yerlerde (widget, arsiv) blok bugunun tarihini gosteriyordu; artik tarih rozeti gizlenir.
+- Tarih makine tarafindan okunabilir `<time datetime>` etiketiyle verilir; kart `<aside>`, bilgi kutulari `<dl>` olarak isaretlenir; `aria-label` gecersiz `div` kullanimlari duzeltildi.
+- Rapor tum yazilari tek seferde yukluyordu; artik en fazla 100 kayit getirir ve toplam sayiyi ayrica gosterir.
+- Ayarlar kaydedildiginde LiteSpeed, WP Rocket, W3 Total Cache ve WP Super Cache onbellekleri temizlenir; degisiklik tum yazilarda hemen gorunur.
+- On yuz scripti `defer` ile yuklenir, imlec efekti yalnizca fare kullanan cihazlarda ve `requestAnimationFrame` ile calisir.
+- Arayuz metinleri Turkce karakterlerle duzeltildi.
+- Blok kenar bosluklari (margin) ve genis/tam hizalama destegi eklendi.
+- Kaldirmada tum yeni ayarlar da temizlenir.
+
 ## 1.7.2 - 2026-07-18
 
 - Bagimsiz guvenlik ve mantik incelemesinden gecmeyen 1.7.1 otomatik tarih kurtarma yaklasimi tamamen kaldirildi.

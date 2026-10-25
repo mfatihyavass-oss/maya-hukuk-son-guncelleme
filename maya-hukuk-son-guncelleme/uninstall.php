@@ -9,11 +9,26 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
     exit;
 }
 
-delete_option('mh_sg_author_name');
-delete_option('mh_sg_bio_text');
-delete_option('mh_sg_action_buttons');
-delete_option('mh_sg_info_boxes');
-delete_option('mh_sg_text_color');
-delete_option('mh_sg_gradient_start');
-delete_option('mh_sg_gradient_end');
+$mh_sg_options = array(
+    'mh_sg_author_name',
+    'mh_sg_author_title',
+    'mh_sg_author_url',
+    'mh_sg_avatar_id',
+    'mh_sg_bio_text',
+    'mh_sg_disclaimer',
+    'mh_sg_action_buttons',
+    'mh_sg_info_boxes',
+    'mh_sg_theme',
+    'mh_sg_date_style',
+    'mh_sg_features',
+    'mh_sg_text_color',
+    'mh_sg_gradient_start',
+    'mh_sg_gradient_end',
+    'mh_sg_accent_color',
+    'mh_sg_auto_insert',
+    'mh_sg_stale_months',
+);
 
+foreach ($mh_sg_options as $mh_sg_option) {
+    delete_option($mh_sg_option);
+}

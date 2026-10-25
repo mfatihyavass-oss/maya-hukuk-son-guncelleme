@@ -2,16 +2,31 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "maya-hukuk/son-guncelleme",
-  "version": "1.7.2",
+  "version": "2.0.0",
   "title": "Maya Hukuk - Son Güncelleme",
   "category": "widgets",
   "icon": "update",
-  "description": "Yazinin son duzenlenme tarihini, bio alanini, butonlari ve bilgi kutularini gosteren dinamik blok.",
-  "keywords": ["son", "guncelleme", "maya hukuk"],
+  "description": "Yazının son güncelleme tarihini, yazar bilgisini, butonları, bilgi kutularını, paylaşım düğmelerini ve yasal uyarıyı gösteren dinamik kart.",
+  "keywords": ["son", "güncelleme", "guncelleme", "yazar", "maya hukuk"],
+  "attributes": {
+    "theme": {
+      "type": "string",
+      "default": ""
+    },
+    "hiddenSections": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    }
+  },
   "supports": {
     "html": false,
     "multiple": true,
-    "reusable": true
+    "reusable": true,
+    "align": ["wide", "full"],
+    "spacing": {
+      "margin": ["top", "bottom"]
+    }
   },
   "usesContext": ["postId", "postType"],
   "textdomain": "maya-hukuk-son-guncelleme",

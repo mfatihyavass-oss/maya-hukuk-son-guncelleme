@@ -1,236 +1,701 @@
+/* ==========================================================================
+   Maya Hukuk - Son Güncelleme kartı
+   Temalar: .mh-sg-theme-lacivert (varsayılan), .mh-sg-theme-acik, .mh-sg-theme-minimal
+   ========================================================================== */
+
 .mh-sg-block {
-    --mh-sg-text-color: #FFFFFF;
-    --mh-sg-gradient-start: #07111F;
-    --mh-sg-gradient-mid: #10253F;
-    --mh-sg-gradient-end: #1F3D63;
-    --mh-sg-accent: #C8A24A;
-    --mh-sg-accent-light: #F0D27B;
+    /* Ayarlardan gelen renkler satır içi --mh-sg-c-* değişkenleriyle aktarılır. */
+    --mh-sg-text-color: var(--mh-sg-c-text, #FFFFFF);
+    --mh-sg-gradient-start: var(--mh-sg-c-start, #07111F);
+    --mh-sg-gradient-end: var(--mh-sg-c-end, #1F3D63);
+    --mh-sg-accent: var(--mh-sg-c-accent, #C8A24A);
+
+    /* Türetilen renkler: tek bir renk ayarı tüm kartı tutarlı biçimde boyar. */
+    --mh-sg-gradient-mid: color-mix(in srgb, var(--mh-sg-gradient-start) 55%, var(--mh-sg-gradient-end));
+    --mh-sg-accent-light: color-mix(in srgb, var(--mh-sg-accent) 62%, #FFF6D8);
+    --mh-sg-accent-text: var(--mh-sg-accent-light);
+    --mh-sg-muted: color-mix(in srgb, var(--mh-sg-text-color) 78%, transparent);
+    --mh-sg-faint: color-mix(in srgb, var(--mh-sg-text-color) 62%, transparent);
+    --mh-sg-line: color-mix(in srgb, var(--mh-sg-text-color) 14%, transparent);
+    --mh-sg-surface: color-mix(in srgb, var(--mh-sg-text-color) 7%, transparent);
+    --mh-sg-surface-strong: color-mix(in srgb, var(--mh-sg-text-color) 12%, transparent);
+    --mh-sg-on-accent: #07111F;
+    --mh-sg-radius: 18px;
     --mh-sg-pointer-opacity: 0;
     --mh-sg-cursor-x: 50%;
     --mh-sg-cursor-y: 0%;
+
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
-    margin: 36px 0;
-    padding: 34px;
-    border-radius: 8px;
+    margin-block: 40px;
+    padding: clamp(22px, 4vw, 36px);
+    border-radius: var(--mh-sg-radius);
     color: var(--mh-sg-text-color);
     background:
-        radial-gradient(circle at var(--mh-sg-cursor-x) var(--mh-sg-cursor-y), rgba(200, 162, 74, var(--mh-sg-pointer-opacity)), transparent 28%),
-        linear-gradient(135deg, var(--mh-sg-gradient-start) 0%, var(--mh-sg-gradient-mid) 48%, var(--mh-sg-gradient-end) 100%);
-    box-shadow: 0 18px 45px rgba(7, 17, 31, 0.35);
+        radial-gradient(circle at var(--mh-sg-cursor-x) var(--mh-sg-cursor-y), color-mix(in srgb, var(--mh-sg-accent) calc(var(--mh-sg-pointer-opacity) * 100%), transparent), transparent 32%),
+        radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--mh-sg-accent) 16%, transparent), transparent 55%),
+        linear-gradient(135deg, var(--mh-sg-gradient-start) 0%, var(--mh-sg-gradient-mid) 50%, var(--mh-sg-gradient-end) 100%);
+    box-shadow:
+        0 1px 0 color-mix(in srgb, var(--mh-sg-text-color) 10%, transparent) inset,
+        0 24px 60px -18px rgba(7, 17, 31, 0.55);
+    font-size: 1rem;
+    line-height: 1.5;
+    text-align: left;
     isolation: isolate;
-    transition: box-shadow 250ms ease, transform 250ms ease;
+}
+
+/* Eski tarayıcılar için color-mix yedekleri */
+@supports not (color: color-mix(in srgb, red, blue)) {
+    .mh-sg-block {
+        --mh-sg-gradient-mid: var(--mh-sg-gradient-start);
+        --mh-sg-accent-light: #F0D27B;
+        --mh-sg-muted: rgba(255, 255, 255, 0.82);
+        --mh-sg-faint: rgba(255, 255, 255, 0.64);
+        --mh-sg-line: rgba(255, 255, 255, 0.14);
+        --mh-sg-surface: rgba(255, 255, 255, 0.07);
+        --mh-sg-surface-strong: rgba(255, 255, 255, 0.12);
+        background: linear-gradient(135deg, var(--mh-sg-gradient-start), var(--mh-sg-gradient-end));
+    }
 }
 
 .mh-sg-block::before {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: 0 0 auto;
     z-index: 1;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--mh-sg-accent) 20%, var(--mh-sg-accent-light) 50%, var(--mh-sg-accent) 80%, transparent);
+    opacity: 0.9;
     pointer-events: none;
-    background: linear-gradient(115deg, transparent 0%, rgba(200, 162, 74, 0.13) 38%, transparent 70%);
-    opacity: 0.75;
 }
 
 .mh-sg-block.is-pointer-active {
-    --mh-sg-pointer-opacity: 0.18;
+    --mh-sg-pointer-opacity: 0.16;
+}
+
+.mh-sg-block *,
+.mh-sg-block *::before,
+.mh-sg-block *::after {
+    box-sizing: border-box;
+}
+
+.mh-sg-watermark {
+    position: absolute;
+    top: -18px;
+    right: -22px;
+    z-index: 0;
+    width: 210px;
+    height: 210px;
+    color: var(--mh-sg-accent);
+    opacity: 0.07;
+    pointer-events: none;
+}
+
+.mh-sg-watermark .mh-sg-icon {
+    width: 100%;
+    height: 100%;
+    stroke-width: 0.9;
 }
 
 .mh-sg-content {
     position: relative;
     z-index: 2;
-    max-width: 720px;
+    display: grid;
+    gap: 20px;
 }
 
-.mh-sg-date,
-.mh-sg-author,
-.mh-sg-bio {
+.mh-sg-icon {
+    flex: 0 0 auto;
+    width: 1.1em;
+    height: 1.1em;
+}
+
+.mh-sg-block p,
+.mh-sg-block ul,
+.mh-sg-block dl,
+.mh-sg-block dd {
     margin: 0;
-    color: inherit;
-    overflow-wrap: anywhere;
+    padding: 0;
+}
+
+/* --- Tarih rozetleri ---------------------------------------------------- */
+
+.mh-sg-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+}
+
+.mh-sg-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    padding: 6px 12px;
+    border: 1px solid var(--mh-sg-line);
+    border-radius: 999px;
+    color: var(--mh-sg-muted);
+    background: var(--mh-sg-surface);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.mh-sg-badge::marker {
+    content: none;
+}
+
+.mh-sg-badge.is-updated {
+    border-color: color-mix(in srgb, var(--mh-sg-accent) 50%, transparent);
+    color: var(--mh-sg-accent-text);
+    background: color-mix(in srgb, var(--mh-sg-accent) 16%, transparent);
+}
+
+.mh-sg-badge time {
+    font-weight: 800;
 }
 
 .mh-sg-date {
-    display: inline-block;
-    margin-bottom: 12px;
-    padding: 7px 13px;
-    border: 1px solid rgba(200, 162, 74, 0.45);
-    border-radius: 999px;
-    color: #F4D37B;
-    background: rgba(200, 162, 74, 0.16);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: 0;
+    margin: 0;
+    color: inherit;
 }
 
-.mh-sg-author {
-    font-size: 2rem;
+/* --- Yazar -------------------------------------------------------------- */
+
+.mh-sg-profile {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+}
+
+.mh-sg-avatar {
+    position: relative;
+    flex: 0 0 auto;
+    width: 76px;
+    height: 76px;
+    padding: 3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mh-sg-accent-light), var(--mh-sg-accent) 55%, color-mix(in srgb, var(--mh-sg-accent) 55%, #000));
+    box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--mh-sg-accent) 60%, transparent);
+}
+
+.mh-sg-avatar img,
+.mh-sg-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border: 3px solid var(--mh-sg-gradient-start);
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.mh-sg-initials {
+    color: var(--mh-sg-accent-light);
+    background: linear-gradient(160deg, var(--mh-sg-gradient-end), var(--mh-sg-gradient-start));
+    font-size: 1.55rem;
     font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.mh-sg-meta {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.mh-sg-eyebrow {
+    color: var(--mh-sg-accent-text);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.3;
+}
+
+.mh-sg-author,
+.mh-sg-author:visited {
+    margin: 0;
+    color: inherit;
+    font-size: clamp(1.45rem, 3.2vw, 1.95rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
     line-height: 1.15;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+a.mh-sg-author:hover,
+a.mh-sg-author:focus-visible {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--mh-sg-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+}
+
+.mh-sg-role {
+    color: var(--mh-sg-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 .mh-sg-bio {
-    max-width: 68ch;
-    margin-top: 12px;
+    max-width: 70ch;
+    color: var(--mh-sg-muted);
     font-size: 1rem;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.86);
+    line-height: 1.75;
+    overflow-wrap: anywhere;
 }
+
+/* --- Bilgi kutuları ----------------------------------------------------- */
 
 .mh-sg-info-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 10px;
-    margin-top: 22px;
 }
 
 .mh-sg-info-box {
     display: grid;
-    gap: 4px;
+    align-content: start;
+    gap: 3px;
     min-width: 0;
-    padding: 12px 14px;
-    border: 1px solid rgba(200, 162, 74, 0.28);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(2px);
-}
-
-.mh-sg-info-title,
-.mh-sg-info-text {
-    color: inherit;
-    overflow-wrap: anywhere;
+    padding: 12px 16px;
+    border: 1px solid var(--mh-sg-line);
+    border-left: 3px solid var(--mh-sg-accent);
+    border-radius: 10px;
+    background: var(--mh-sg-surface);
 }
 
 .mh-sg-info-title {
-    color: #F4D37B;
-    font-size: 0.78rem;
-    font-weight: 800;
-    line-height: 1.25;
+    margin: 0;
+    color: var(--mh-sg-accent-text);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.3;
 }
 
 .mh-sg-info-text {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.94rem;
+    margin: 0;
+    color: var(--mh-sg-text-color);
+    font-size: 0.95rem;
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+/* --- Alt bölüm: butonlar ve paylaşım ------------------------------------ */
+
+.mh-sg-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--mh-sg-line);
 }
 
 .mh-sg-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 24px;
 }
 
-.mh-sg-action {
+.mh-sg-action,
+.mh-sg-action:visited {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 9px;
     max-width: 100%;
-    min-height: 48px;
-    box-sizing: border-box;
-    padding: 14px 20px;
-    border: 0;
-    border-radius: 8px;
-    color: #07111F !important;
-    background: linear-gradient(135deg, var(--mh-sg-accent), var(--mh-sg-accent-light));
-    box-shadow: 0 10px 26px rgba(200, 162, 74, 0.32);
-    font-size: 0.96rem;
-    font-weight: 800;
+    min-height: 46px;
+    padding: 12px 20px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
     line-height: 1.2;
     text-align: center;
     text-decoration: none !important;
     overflow-wrap: anywhere;
-    transition: transform 250ms ease, box-shadow 250ms ease, filter 250ms ease;
+    cursor: pointer;
+    transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease, border-color 220ms ease, color 220ms ease;
+}
+
+.mh-sg-action.is-primary,
+.mh-sg-action.is-primary:visited {
+    color: var(--mh-sg-on-accent) !important;
+    background: linear-gradient(135deg, var(--mh-sg-accent), var(--mh-sg-accent-light));
+    box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--mh-sg-accent) 75%, transparent);
+}
+
+.mh-sg-action.is-secondary,
+.mh-sg-action.is-secondary:visited {
+    border-color: color-mix(in srgb, var(--mh-sg-accent) 55%, transparent);
+    color: var(--mh-sg-text-color) !important;
+    background: var(--mh-sg-surface);
 }
 
 .mh-sg-action:hover,
-.mh-sg-action:focus {
-    color: #07111F !important;
-    filter: brightness(1.05);
-    box-shadow: 0 16px 34px rgba(200, 162, 74, 0.42);
-    text-decoration: none !important;
-    transform: translateY(-3px);
+.mh-sg-action:focus-visible {
+    transform: translateY(-2px);
 }
 
-.mh-sg-action:focus-visible {
-    outline: 2px solid #F4D37B;
+.mh-sg-action.is-primary:hover,
+.mh-sg-action.is-primary:focus-visible {
+    color: var(--mh-sg-on-accent) !important;
+    box-shadow: 0 16px 30px -10px color-mix(in srgb, var(--mh-sg-accent) 85%, transparent);
+}
+
+.mh-sg-action.is-secondary:hover,
+.mh-sg-action.is-secondary:focus-visible {
+    border-color: var(--mh-sg-accent);
+    color: var(--mh-sg-text-color) !important;
+    background: var(--mh-sg-surface-strong);
+}
+
+.mh-sg-action:focus-visible,
+.mh-sg-share-link:focus-visible,
+a.mh-sg-author:focus-visible {
+    outline: 2px solid var(--mh-sg-accent-light);
     outline-offset: 3px;
 }
 
+.mh-sg-action-lead,
 .mh-sg-action-icon {
-    flex: 0 0 auto;
-    font-size: 1.25rem;
+    display: inline-flex;
     line-height: 1;
-    transition: transform 250ms ease;
+}
+
+.mh-sg-action-icon {
+    transition: transform 220ms ease;
 }
 
 .mh-sg-action:hover .mh-sg-action-icon,
-.mh-sg-action:focus .mh-sg-action-icon {
-    transform: translateX(4px);
+.mh-sg-action:focus-visible .mh-sg-action-icon {
+    transform: translateX(3px);
 }
 
-.mh-sg-action.is-clicked,
-.mh-sg-action.maya-ai-clicked {
-    animation: mh-sg-button-pulse 360ms ease;
+.mh-sg-action.is-clicked {
+    animation: mh-sg-button-pulse 340ms ease;
 }
 
-.editor-styles-wrapper .mh-sg-block,
-.block-editor-block-list__layout .mh-sg-block {
-    min-height: 0;
+.mh-sg-share {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.mh-sg-share-label {
+    margin-right: 4px;
+    color: var(--mh-sg-faint);
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.mh-sg-share-link,
+.mh-sg-share-link:visited {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--mh-sg-line);
+    border-radius: 50%;
+    color: var(--mh-sg-muted) !important;
+    background: var(--mh-sg-surface);
+    font: inherit;
+    line-height: 1;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.mh-sg-share-link:hover,
+.mh-sg-share-link:focus-visible {
+    border-color: var(--mh-sg-accent);
+    color: var(--mh-sg-on-accent) !important;
+    background: var(--mh-sg-accent);
+    transform: translateY(-2px);
+}
+
+.mh-sg-share-link.is-copied {
+    border-color: #3FB37F;
+    color: #FFFFFF !important;
+    background: #3FB37F;
+}
+
+.mh-sg-share-link .mh-sg-icon {
+    width: 17px;
+    height: 17px;
+}
+
+.mh-sg-copy-status {
+    min-width: 0;
+    color: var(--mh-sg-accent-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.mh-sg-copy-status:empty {
+    display: none;
+}
+
+/* --- Yasal uyarı -------------------------------------------------------- */
+
+.mh-sg-disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: var(--mh-sg-faint);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+
+.mh-sg-footer + .mh-sg-disclaimer {
+    margin-top: -4px;
+}
+
+.mh-sg-disclaimer .mh-sg-icon {
+    margin-top: 0.2em;
+    color: var(--mh-sg-accent);
+}
+
+.mh-sg-sr {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==========================================================================
+   Açık tema
+   ========================================================================== */
+
+.mh-sg-block.mh-sg-theme-acik {
+    --mh-sg-text-color: #0F1B2D;
+    --mh-sg-accent-text: color-mix(in srgb, var(--mh-sg-accent) 70%, #000);
+    --mh-sg-muted: #44516A;
+    --mh-sg-faint: #66728A;
+    --mh-sg-line: #E3E7EF;
+    --mh-sg-surface: #F6F8FB;
+    --mh-sg-surface-strong: #EDF1F7;
+    --mh-sg-gradient-start: #FFFFFF;
+    --mh-sg-gradient-end: #13284A;
+    border: 1px solid #E3E7EF;
+    background:
+        radial-gradient(circle at var(--mh-sg-cursor-x) var(--mh-sg-cursor-y), color-mix(in srgb, var(--mh-sg-accent) calc(var(--mh-sg-pointer-opacity) * 60%), transparent), transparent 30%),
+        radial-gradient(110% 80% at 100% 0%, color-mix(in srgb, var(--mh-sg-accent) 9%, transparent), transparent 60%),
+        #FFFFFF;
+    box-shadow: 0 18px 50px -24px rgba(15, 27, 45, 0.28);
+}
+
+.mh-sg-theme-acik .mh-sg-initials {
+    color: var(--mh-sg-accent-light);
+    background: linear-gradient(160deg, #1F3D63, #07111F);
+}
+
+.mh-sg-theme-acik .mh-sg-avatar img,
+.mh-sg-theme-acik .mh-sg-initials {
+    border-color: #FFFFFF;
+}
+
+.mh-sg-theme-acik .mh-sg-action.is-secondary {
+    background: #FFFFFF;
+}
+
+.mh-sg-theme-acik .mh-sg-watermark {
+    opacity: 0.06;
+}
+
+/* ==========================================================================
+   Minimal tema
+   ========================================================================== */
+
+.mh-sg-block.mh-sg-theme-minimal {
+    --mh-sg-text-color: currentColor;
+    --mh-sg-accent-text: color-mix(in srgb, var(--mh-sg-accent) 72%, #000);
+    --mh-sg-muted: color-mix(in srgb, currentColor 78%, transparent);
+    --mh-sg-faint: color-mix(in srgb, currentColor 64%, transparent);
+    --mh-sg-line: color-mix(in srgb, currentColor 14%, transparent);
+    --mh-sg-surface: color-mix(in srgb, currentColor 4%, transparent);
+    --mh-sg-surface-strong: color-mix(in srgb, currentColor 8%, transparent);
+    --mh-sg-radius: 0;
+    padding: 26px 0;
+    border-top: 1px solid var(--mh-sg-line);
+    border-bottom: 1px solid var(--mh-sg-line);
+    color: inherit;
+    background: transparent;
+    box-shadow: none;
+}
+
+.mh-sg-theme-minimal::before,
+.mh-sg-theme-minimal .mh-sg-watermark {
+    display: none;
+}
+
+.mh-sg-theme-minimal .mh-sg-content {
+    gap: 16px;
+}
+
+.mh-sg-theme-minimal .mh-sg-avatar {
+    width: 60px;
+    height: 60px;
+    padding: 2px;
+    box-shadow: none;
+}
+
+.mh-sg-theme-minimal .mh-sg-avatar img,
+.mh-sg-theme-minimal .mh-sg-initials {
+    border-width: 2px;
+    border-color: transparent;
+}
+
+.mh-sg-theme-minimal .mh-sg-initials {
+    color: #FFFFFF;
+    background: #13284A;
+    font-size: 1.2rem;
+}
+
+.mh-sg-theme-minimal .mh-sg-author {
+    font-size: 1.35rem;
+}
+
+.mh-sg-theme-minimal .mh-sg-info-box {
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+/* ==========================================================================
+   Duyarlı yerleşim ve erişilebilirlik
+   ========================================================================== */
+
+.mh-sg-block.alignfull {
+    border-radius: 0;
+}
+
+.mh-sg-editor-wrapper .mh-sg-block {
+    margin-block: 0;
 }
 
 @keyframes mh-sg-button-pulse {
     0% {
-        transform: translateY(-3px) scale(1);
+        transform: translateY(-2px) scale(1);
     }
 
     50% {
-        transform: translateY(-3px) scale(0.98);
+        transform: translateY(-2px) scale(0.97);
     }
 
     100% {
-        transform: translateY(-3px) scale(1);
+        transform: translateY(-2px) scale(1);
     }
 }
 
 @media (max-width: 640px) {
-    .mh-sg-block {
-        padding: 26px 22px;
+    .mh-sg-profile {
+        gap: 14px;
     }
 
-    .mh-sg-author {
-        font-size: 1.55rem;
+    .mh-sg-avatar {
+        width: 62px;
+        height: 62px;
+    }
+
+    .mh-sg-initials {
+        font-size: 1.25rem;
     }
 
     .mh-sg-info-list {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .mh-sg-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .mh-sg-actions {
+        display: grid;
         grid-template-columns: 1fr;
     }
 
     .mh-sg-action {
         width: 100%;
+        justify-content: space-between;
+    }
+
+    .mh-sg-action .mh-sg-action-label {
+        flex: 1 1 auto;
+        text-align: left;
+    }
+
+    .mh-sg-watermark {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 420px) {
+    .mh-sg-info-list {
+        grid-template-columns: 1fr;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .mh-sg-block,
-    .mh-sg-action,
-    .mh-sg-action-icon {
-        transition: none;
+    .mh-sg-block *,
+    .mh-sg-block {
+        transition: none !important;
+        animation: none !important;
     }
 
     .mh-sg-action:hover,
-    .mh-sg-action:focus,
+    .mh-sg-action:focus-visible,
+    .mh-sg-share-link:hover,
+    .mh-sg-share-link:focus-visible,
     .mh-sg-action:hover .mh-sg-action-icon,
-    .mh-sg-action:focus .mh-sg-action-icon {
+    .mh-sg-action:focus-visible .mh-sg-action-icon {
         transform: none;
     }
+}
 
-    .mh-sg-action.is-clicked,
-    .mh-sg-action.maya-ai-clicked {
-        animation: none;
+@media print {
+    .mh-sg-block {
+        --mh-sg-text-color: #000000;
+        --mh-sg-muted: #333333;
+        --mh-sg-faint: #555555;
+        --mh-sg-line: #CCCCCC;
+        --mh-sg-surface: transparent;
+        --mh-sg-accent-text: #000000;
+        border: 1px solid #CCCCCC;
+        color: #000000;
+        background: #FFFFFF !important;
+        box-shadow: none;
+        break-inside: avoid;
+    }
+
+    .mh-sg-block::before,
+    .mh-sg-watermark,
+    .mh-sg-share,
+    .mh-sg-actions {
+        display: none !important;
     }
 }

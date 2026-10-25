@@ -17,6 +17,10 @@ function add_filter($hook, $callback) {
     $GLOBALS['mh_test_filters'][$hook][] = $callback;
 }
 
+function plugin_basename($file) {
+    return basename(dirname($file)) . '/' . basename($file);
+}
+
 function register_activation_hook($file, $callback) {
     // Registration is irrelevant to this regression test.
 }
