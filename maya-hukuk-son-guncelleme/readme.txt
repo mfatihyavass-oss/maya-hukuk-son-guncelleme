@@ -4,7 +4,7 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,11 @@ Evet. Ayarlar ekraninda buton veya bilgi kutusu satirlarini silebilir ya da bos 
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 2.2.0 =
+
+- Kart genis ekranda temanin icerik genisligine (yazi metni kadar) sikisip dar kaliyordu. `Kart genisligi` ayari eklendi; varsayilan `Genis` secenegi karti sitedeki bolumler gibi en fazla 1200 px'e acar.
+- Blokta `Genis/Tam genislik` hizalamasi secilirse genel ayar yerine o kullanilir.
 
 = 2.1.0 =
 

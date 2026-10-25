@@ -2,7 +2,7 @@
 
 WordPress Gutenberg editoru icin dinamik "Son Guncelleme" ve yazar karti. Kart, yazinin son duzenlenme tarihini gosterir; yazar, fotograf, unvan, bio, butonlar, bilgi kutulari, paylasim ve yasal uyari tek bir ayarlar ekranindan tum siteye uygulanir.
 
-Guncel surum: `2.1.0`
+Guncel surum: `2.2.0`
 
 ## Ozellikler
 
@@ -16,6 +16,7 @@ Guncel surum: `2.1.0`
 - Paylasim: WhatsApp, LinkedIn, X, Facebook ve baglanti kopyalama
 - Yasal uyari metni
 - Dort tema: `Lila` (varsayilan; sitenin lila-beyaz-mor ana sayfa kartlariyla ayni dil), `Lacivert & Altin`, `Acik kart`, `Minimal cizgi`; vurgu rengi (varsayilan `#5B3A91`), metin ve gradyan renkleri ayarlanabilir
+- Kart genisligi: `Genis` (en fazla 1200 px, varsayilan), `Yazi metni kadar`, `Kapsayicinin tamami`
 - Mobil uyumlu, klavye ile kullanilabilir, hareket azaltma tercihine ve yazdirmaya uyumlu
 
 ### Blok bazinda ayarlar

@@ -399,3 +399,10 @@
     gap: 6px;
     font-size: 12px;
 }
+
+.mh-sg-block-choice {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0;
+}

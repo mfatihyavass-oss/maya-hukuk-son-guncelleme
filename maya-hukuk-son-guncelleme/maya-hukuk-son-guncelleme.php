@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Güncelleme Bloku
  * Description:       Gutenberg için dinamik yazar ve son güncelleme kartı: yazar fotoğrafı, unvan, bio, tarih rozetleri, okuma süresi, butonlar, bilgi kutuları, paylaşım, yasal uyarı, otomatik ekleme ve güncellik raporları.
- * Version:           2.1.0
+ * Version:           2.2.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Maya Hukuk
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Maya_Hukuk_Son_Guncelleme {
-    const VERSION = '2.1.0';
+    const VERSION = '2.2.0';
     const BLOCK_NAME = 'maya-hukuk/son-guncelleme';
     const SHORTCODE = 'maya_son_guncelleme';
     const DASHBOARD_NONCE_ACTION = 'mh_sg_dashboard_date_audit';
@@ -34,6 +34,7 @@ final class Maya_Hukuk_Son_Guncelleme {
     const OPTION_INFO_BOXES = 'mh_sg_info_boxes';
     const OPTION_THEME = 'mh_sg_theme';
     const OPTION_DATE_STYLE = 'mh_sg_date_style';
+    const OPTION_WIDTH = 'mh_sg_width';
     const OPTION_FEATURES = 'mh_sg_features';
     const OPTION_TEXT_COLOR = 'mh_sg_text_color';
     const OPTION_GRADIENT_START = 'mh_sg_gradient_start';
@@ -54,6 +55,13 @@ final class Maya_Hukuk_Son_Guncelleme {
     const DEFAULT_GRADIENT_END = '#1F3D63';
     const DEFAULT_ACCENT_COLOR = '#5B3A91';
     const DEFAULT_THEME = 'lila';
+    const DEFAULT_WIDTH = 'wide';
+
+    const WIDTHS = array(
+        'wide' => 'Geniş — sitedeki bölümlerle aynı (en fazla 1200 px)',
+        'content' => 'Yazı metni kadar (temanın içerik genişliği)',
+        'full' => 'Kapsayıcının tamamı',
+    );
     const DEFAULT_STALE_MONTHS = 12;
     const REPORT_LIMIT = 100;
     const WORDS_PER_MINUTE = 200;
@@ -157,6 +165,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_INFO_BOXES,
             self::OPTION_THEME,
             self::OPTION_DATE_STYLE,
+            self::OPTION_WIDTH,
             self::OPTION_FEATURES,
             self::OPTION_TEXT_COLOR,
             self::OPTION_GRADIENT_START,
@@ -209,6 +218,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             'themes' => self::THEMES,
             'sections' => self::SECTIONS,
             'globalTheme' => $this->get_settings()['theme'],
+            'globalWidth' => $this->get_settings()['width'],
         ));
 
         register_block_type(__DIR__ . '/block.json', array(
@@ -322,6 +332,11 @@ final class Maya_Hukuk_Son_Guncelleme {
         );
 
         $classes = array('mh-sg-block', 'mh-sg-theme-' . $theme);
+
+        // Blokta "geniş/tam genişlik" hizalaması seçildiyse genel genişlik ayarı devreye girmez.
+        if ($options['align'] === '') {
+            $classes[] = 'mh-sg-width-' . $s['width'];
+        }
 
         if ($show['avatar']) {
             $classes[] = 'has-avatar';
@@ -522,6 +537,7 @@ final class Maya_Hukuk_Son_Guncelleme {
         return array(
             'theme' => isset(self::THEMES[$theme]) ? $theme : '',
             'hidden' => array_values(array_intersect(array_map('strval', $hidden), array_keys(self::SECTIONS))),
+            'align' => isset($attributes['align']) && in_array($attributes['align'], array('wide', 'full'), true) ? $attributes['align'] : '',
             'use_wrapper' => false,
             'extra_class' => '',
         );
@@ -680,6 +696,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_INFO_BOXES => array('array', 'sanitize_info_boxes', self::get_default_info_boxes()),
             self::OPTION_THEME => array('string', 'sanitize_theme', self::DEFAULT_THEME),
             self::OPTION_DATE_STYLE => array('string', 'sanitize_date_style', 'long'),
+            self::OPTION_WIDTH => array('string', 'sanitize_width', self::DEFAULT_WIDTH),
             self::OPTION_FEATURES => array('array', 'sanitize_features', self::DEFAULT_FEATURES),
             self::OPTION_TEXT_COLOR => array('string', 'sanitize_text_color', self::DEFAULT_TEXT_COLOR),
             self::OPTION_GRADIENT_START => array('string', 'sanitize_gradient_start_color', self::DEFAULT_GRADIENT_START),
@@ -727,6 +744,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             'info_boxes' => $this->sanitize_info_boxes($read(self::OPTION_INFO_BOXES, self::get_default_info_boxes())),
             'theme' => $this->sanitize_theme($read(self::OPTION_THEME, self::DEFAULT_THEME)),
             'date_style' => $this->sanitize_date_style($read(self::OPTION_DATE_STYLE, 'long')),
+            'width' => $this->sanitize_width($read(self::OPTION_WIDTH, self::DEFAULT_WIDTH)),
             'features' => $this->sanitize_features($read(self::OPTION_FEATURES, self::DEFAULT_FEATURES)),
             'text_color' => $this->sanitize_text_color($read(self::OPTION_TEXT_COLOR, self::DEFAULT_TEXT_COLOR)),
             'gradient_start' => $this->sanitize_gradient_start_color($read(self::OPTION_GRADIENT_START, self::DEFAULT_GRADIENT_START)),
@@ -830,6 +848,10 @@ final class Maya_Hukuk_Son_Guncelleme {
 
     public function sanitize_theme($value) {
         return is_string($value) && isset(self::THEMES[$value]) ? $value : self::DEFAULT_THEME;
+    }
+
+    public function sanitize_width($value) {
+        return is_string($value) && isset(self::WIDTHS[$value]) ? $value : self::DEFAULT_WIDTH;
     }
 
     public function sanitize_date_style($value) {
@@ -1157,6 +1179,14 @@ final class Maya_Hukuk_Son_Guncelleme {
                             <?php $this->render_color_field(self::OPTION_TEXT_COLOR, 'Metin rengi', $s['text_color'], 'Lacivert tema'); ?>
                             <?php $this->render_color_field(self::OPTION_GRADIENT_START, 'Gradyan başlangıç', $s['gradient_start'], 'Lacivert tema'); ?>
                             <?php $this->render_color_field(self::OPTION_GRADIENT_END, 'Gradyan bitiş', $s['gradient_end'], 'Lacivert tema'); ?>
+                        </div>
+
+                        <div class="mh-sg-field">
+                            <span class="mh-sg-label">Kart genişliği</span>
+                            <?php foreach (self::WIDTHS as $width_key => $width_label) : ?>
+                                <label class="mh-sg-block-choice"><input type="radio" name="<?php echo esc_attr(self::OPTION_WIDTH); ?>" value="<?php echo esc_attr($width_key); ?>" <?php checked($s['width'], $width_key); ?> /> <?php echo esc_html($width_label); ?></label>
+                            <?php endforeach; ?>
+                            <p class="description">Tema yazı içindeki blokları metin genişliğine daraltır. "Geniş" seçeneği kartı ana sayfanızdaki bölümler gibi geniş ekranda 1200 px'e kadar açar; dar ekranda her zaman ekrana sığar.</p>
                         </div>
 
                         <div class="mh-sg-field">

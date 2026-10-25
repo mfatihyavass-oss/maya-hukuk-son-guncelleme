@@ -20,6 +20,7 @@ $mh_sg_options = array(
     'mh_sg_info_boxes',
     'mh_sg_theme',
     'mh_sg_date_style',
+    'mh_sg_width',
     'mh_sg_features',
     'mh_sg_text_color',
     'mh_sg_gradient_start',
