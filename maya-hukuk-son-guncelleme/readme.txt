@@ -22,7 +22,7 @@ Blok, ilgili yazi/sayfanin son duzenlenme tarihini gosterir ve asagidaki global 
 - Bilgi kutulari
 - Paylasim ve baglanti kopyalama
 - Yasal uyari
-- Uc tema ve renk ayarlari
+- Dort tema (varsayilan: site renklerine uygun Lila) ve renk ayarlari
 - Yayin tarihi ve okuma suresi rozetleri
 - Otomatik ekleme ve kisa kod
 - Yazi listesinde guncellik sutunu ve Baslangic ekrani raporlari
@@ -78,7 +78,7 @@ Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 = 2.0.0 =
 
-- Kart bastan tasarlandi; uc tema, yazar fotografi, unvan, simgeli tarih rozetleri.
+- Kart bastan tasarlandi; site renklerine uygun varsayilan Lila tema dahil dort tema, yazar fotografi, unvan, simgeli tarih rozetleri.
 - Paylasim, baglanti kopyalama, yasal uyari, okuma suresi ve yayin tarihi rozeti eklendi.
 - Blok bazinda tema ve bolum gizleme; otomatik ekleme ve kisa kod.
 - Canli onizlemeli yeni ayarlar sayfasi.

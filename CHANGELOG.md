@@ -4,7 +4,8 @@
 
 ### Yeni tasarım
 - Kart bastan tasarlandi: altin ust cizgi, terazi filigrani, yazar fotografi veya bas harf rozeti, unvan satiri, simgeli tarih rozetleri, sol vurgulu bilgi kutulari.
-- Uc tema: `Lacivert & Altin` (varsayilan), `Acik kart` ve `Minimal cizgi`. Tema genel ayardan veya her blokta ayri secilebilir.
+- Dort tema: sitenin lila-beyaz-mor kimligine uygun `Lila` (varsayilan), `Lacivert & Altin`, `Acik kart` ve `Minimal cizgi`. Tema genel ayardan veya her blokta ayri secilebilir.
+- Varsayilan vurgu rengi site moru `#5B3A91`; Lila temadaki tum tonlar bu renkten turetilir.
 - Ilk buton vurgulu, digerleri ikincil gorunur; `tel:`, `mailto:`, WhatsApp ve Google Haritalar baglantilarina otomatik simge eklenir; istege bagli yeni sekmede acma.
 - Mobilde butonlar tam genislik, bilgi kutulari iki sutun; yazdirma gorunumu eklendi.
 

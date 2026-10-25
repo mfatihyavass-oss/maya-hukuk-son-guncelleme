@@ -25,8 +25,8 @@
 .mh-sg-version {
     padding: 4px 10px;
     border-radius: 999px;
-    color: #7a5b12;
-    background: #f7edd2;
+    color: #5b3a91;
+    background: #ece2f4;
     font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
@@ -127,10 +127,10 @@
     width: 56px;
     height: 56px;
     overflow: hidden;
-    border: 2px solid #c8a24a;
+    border: 2px solid #ccb9de;
     border-radius: 50%;
-    color: #f0d27b;
-    background: #13284a;
+    color: #5b3a91;
+    background: #f1eaf8;
     font-weight: 700;
 }
 
@@ -221,8 +221,8 @@
 }
 
 .mh-sg-theme-choice:has(input:checked) {
-    border-color: #c8a24a;
-    background: #fffaf0;
+    border-color: #5b3a91;
+    background: #f5f1f9;
 }
 
 .mh-sg-theme-choice:has(input:focus-visible) {
@@ -234,6 +234,12 @@
     display: block;
     height: 46px;
     border-radius: 6px;
+}
+
+.is-lila .mh-sg-theme-swatch {
+    border: 1px solid #e8dff2;
+    background: #fcfaff;
+    box-shadow: inset 4px 0 0 #a58abd, inset 0 -14px 0 #ece2f4;
 }
 
 .is-lacivert .mh-sg-theme-swatch {

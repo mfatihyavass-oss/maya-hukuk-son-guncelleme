@@ -15,7 +15,7 @@ Guncel surum: `2.0.0`
 - Bilgi kutulari (Baro, uzmanlik, ofis vb.)
 - Paylasim: WhatsApp, LinkedIn, X, Facebook ve baglanti kopyalama
 - Yasal uyari metni
-- Uc tema: `Lacivert & Altin`, `Acik kart`, `Minimal cizgi`; vurgu, metin ve gradyan renkleri ayarlanabilir
+- Dort tema: `Lila` (varsayilan; sitenin lila-beyaz-mor ana sayfa kartlariyla ayni dil), `Lacivert & Altin`, `Acik kart`, `Minimal cizgi`; vurgu rengi (varsayilan `#5B3A91`), metin ve gradyan renkleri ayarlanabilir
 - Mobil uyumlu, klavye ile kullanilabilir, hareket azaltma tercihine ve yazdirmaya uyumlu
 
 ### Blok bazinda ayarlar

@@ -50,12 +50,14 @@ final class Maya_Hukuk_Son_Guncelleme {
     const DEFAULT_TEXT_COLOR = '#FFFFFF';
     const DEFAULT_GRADIENT_START = '#07111F';
     const DEFAULT_GRADIENT_END = '#1F3D63';
-    const DEFAULT_ACCENT_COLOR = '#C8A24A';
+    const DEFAULT_ACCENT_COLOR = '#5B3A91';
+    const DEFAULT_THEME = 'lila';
     const DEFAULT_STALE_MONTHS = 12;
     const REPORT_LIMIT = 100;
     const WORDS_PER_MINUTE = 200;
 
     const THEMES = array(
+        'lila' => 'Lila (site teması)',
         'lacivert' => 'Lacivert & Altın (koyu)',
         'acik' => 'Açık kart',
         'minimal' => 'Minimal çizgi',
@@ -661,7 +663,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_DISCLAIMER => array('string', 'sanitize_bio_text', self::get_default_disclaimer()),
             self::OPTION_ACTION_BUTTONS => array('array', 'sanitize_action_buttons', self::get_default_action_buttons()),
             self::OPTION_INFO_BOXES => array('array', 'sanitize_info_boxes', self::get_default_info_boxes()),
-            self::OPTION_THEME => array('string', 'sanitize_theme', 'lacivert'),
+            self::OPTION_THEME => array('string', 'sanitize_theme', self::DEFAULT_THEME),
             self::OPTION_DATE_STYLE => array('string', 'sanitize_date_style', 'long'),
             self::OPTION_FEATURES => array('array', 'sanitize_features', self::DEFAULT_FEATURES),
             self::OPTION_TEXT_COLOR => array('string', 'sanitize_text_color', self::DEFAULT_TEXT_COLOR),
@@ -706,7 +708,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             'disclaimer' => $this->sanitize_bio_text($read(self::OPTION_DISCLAIMER, self::get_default_disclaimer())),
             'action_buttons' => $this->sanitize_action_buttons($read(self::OPTION_ACTION_BUTTONS, self::get_default_action_buttons())),
             'info_boxes' => $this->sanitize_info_boxes($read(self::OPTION_INFO_BOXES, self::get_default_info_boxes())),
-            'theme' => $this->sanitize_theme($read(self::OPTION_THEME, 'lacivert')),
+            'theme' => $this->sanitize_theme($read(self::OPTION_THEME, self::DEFAULT_THEME)),
             'date_style' => $this->sanitize_date_style($read(self::OPTION_DATE_STYLE, 'long')),
             'features' => $this->sanitize_features($read(self::OPTION_FEATURES, self::DEFAULT_FEATURES)),
             'text_color' => $this->sanitize_text_color($read(self::OPTION_TEXT_COLOR, self::DEFAULT_TEXT_COLOR)),
@@ -808,7 +810,7 @@ final class Maya_Hukuk_Son_Guncelleme {
     }
 
     public function sanitize_theme($value) {
-        return is_string($value) && isset(self::THEMES[$value]) ? $value : 'lacivert';
+        return is_string($value) && isset(self::THEMES[$value]) ? $value : self::DEFAULT_THEME;
     }
 
     public function sanitize_date_style($value) {
@@ -1109,7 +1111,7 @@ final class Maya_Hukuk_Son_Guncelleme {
                         </div>
 
                         <div class="mh-sg-field-grid is-colors">
-                            <?php $this->render_color_field(self::OPTION_ACCENT_COLOR, 'Vurgu rengi', $s['accent_color'], 'Tüm temalarda kullanılır.'); ?>
+                            <?php $this->render_color_field(self::OPTION_ACCENT_COLOR, 'Vurgu rengi', $s['accent_color'], 'Tüm temalarda kullanılır. Site moru: #5B3A91, lacivert tema için altın: #C8A24A'); ?>
                             <?php $this->render_color_field(self::OPTION_TEXT_COLOR, 'Metin rengi', $s['text_color'], 'Lacivert tema'); ?>
                             <?php $this->render_color_field(self::OPTION_GRADIENT_START, 'Gradyan başlangıç', $s['gradient_start'], 'Lacivert tema'); ?>
                             <?php $this->render_color_field(self::OPTION_GRADIENT_END, 'Gradyan bitiş', $s['gradient_end'], 'Lacivert tema'); ?>

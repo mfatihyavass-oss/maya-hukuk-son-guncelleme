@@ -8,7 +8,7 @@
     --mh-sg-text-color: var(--mh-sg-c-text, #FFFFFF);
     --mh-sg-gradient-start: var(--mh-sg-c-start, #07111F);
     --mh-sg-gradient-end: var(--mh-sg-c-end, #1F3D63);
-    --mh-sg-accent: var(--mh-sg-c-accent, #C8A24A);
+    --mh-sg-accent: var(--mh-sg-c-accent, #5B3A91);
 
     /* Türetilen renkler: tek bir renk ayarı tüm kartı tutarlı biçimde boyar. */
     --mh-sg-gradient-mid: color-mix(in srgb, var(--mh-sg-gradient-start) 55%, var(--mh-sg-gradient-end));
@@ -481,6 +481,284 @@ a.mh-sg-author:focus-visible {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+}
+
+/* ==========================================================================
+   Lila tema (varsayılan) — bursa.mayahukuk.com ana sayfa kartlarıyla aynı dil:
+   lila zemin, ince lila çerçeve, düz mor butonlar, gölgesiz sade yüzeyler.
+   Tüm tonlar vurgu renginden türetilir; varsayılan vurgu #5B3A91.
+   ========================================================================== */
+
+.mh-sg-block.mh-sg-theme-lila {
+    --mh-sg-ink: color-mix(in srgb, var(--mh-sg-accent) 68%, #1A0B33);
+    --mh-sg-kicker: color-mix(in srgb, var(--mh-sg-accent) 86%, #FFFFFF);
+    --mh-sg-text-color: var(--mh-sg-ink);
+    --mh-sg-accent-text: var(--mh-sg-accent);
+    --mh-sg-accent-light: color-mix(in srgb, var(--mh-sg-accent) 55%, #FFFFFF);
+    --mh-sg-muted: #655D70;
+    --mh-sg-faint: #776F82;
+    --mh-sg-line: color-mix(in srgb, var(--mh-sg-accent) 16%, #FFFFFF);
+    --mh-sg-line-strong: color-mix(in srgb, var(--mh-sg-accent) 30%, #FFFFFF);
+    --mh-sg-surface: color-mix(in srgb, var(--mh-sg-accent) 6%, #FFFFFF);
+    --mh-sg-surface-strong: color-mix(in srgb, var(--mh-sg-accent) 12%, #FFFFFF);
+    --mh-sg-gradient-start: #FFFFFF;
+    --mh-sg-on-accent: #FFFFFF;
+    --mh-sg-radius: 18px;
+    padding: clamp(24px, 3.6vw, 40px);
+    border: 1px solid var(--mh-sg-line);
+    color: var(--mh-sg-ink);
+    background: color-mix(in srgb, var(--mh-sg-accent) 2.5%, #FFFFFF);
+    box-shadow: none;
+}
+
+@supports not (color: color-mix(in srgb, red, blue)) {
+    .mh-sg-block.mh-sg-theme-lila {
+        --mh-sg-ink: #3F286E;
+        --mh-sg-kicker: #795B9D;
+        --mh-sg-accent-light: #B69BCE;
+        --mh-sg-line: #E8DFF2;
+        --mh-sg-line-strong: #CCB9DE;
+        --mh-sg-surface: #F5EFFA;
+        --mh-sg-surface-strong: #ECE2F4;
+        background: #FCFAFF;
+    }
+}
+
+.mh-sg-theme-lila::before,
+.mh-sg-theme-lila .mh-sg-watermark {
+    display: none;
+}
+
+.mh-sg-theme-lila .mh-sg-content {
+    gap: 22px;
+}
+
+/* Rozetler: güncelleme rozeti ana sayfadaki etiket stilinde */
+.mh-sg-theme-lila .mh-sg-badge {
+    border-radius: 6px;
+    border-color: var(--mh-sg-line);
+    color: var(--mh-sg-muted);
+    background: #FFFFFF;
+    font-weight: 500;
+}
+
+.mh-sg-theme-lila .mh-sg-badge.is-updated {
+    border-color: color-mix(in srgb, var(--mh-sg-accent) 24%, #FFFFFF);
+    color: color-mix(in srgb, var(--mh-sg-accent) 90%, #FFFFFF);
+    background: var(--mh-sg-surface-strong);
+    font-weight: 600;
+}
+
+.mh-sg-theme-lila .mh-sg-badge time {
+    font-weight: 700;
+}
+
+/* Yazar: ana sayfadaki portre çerçevesi gibi yuvarlatılmış kare */
+.mh-sg-theme-lila .mh-sg-avatar {
+    width: 84px;
+    height: 84px;
+    padding: 4px;
+    border: 1px solid var(--mh-sg-line);
+    border-radius: 13px;
+    background: var(--mh-sg-surface-strong);
+    box-shadow: none;
+}
+
+.mh-sg-theme-lila .mh-sg-avatar img,
+.mh-sg-theme-lila .mh-sg-initials {
+    border: 0;
+    border-radius: 9px;
+}
+
+.mh-sg-theme-lila .mh-sg-avatar img {
+    object-position: center top;
+}
+
+.mh-sg-theme-lila .mh-sg-initials {
+    color: var(--mh-sg-accent);
+    background: #FFFFFF;
+    font-size: 1.45rem;
+    font-weight: 650;
+}
+
+.mh-sg-theme-lila .mh-sg-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2px;
+    color: var(--mh-sg-kicker);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.mh-sg-theme-lila .mh-sg-eyebrow::before {
+    content: "";
+    flex: 0 0 22px;
+    height: 1px;
+    background: var(--mh-sg-accent-light);
+}
+
+.mh-sg-theme-lila .mh-sg-author,
+.mh-sg-theme-lila .mh-sg-author:visited {
+    color: var(--mh-sg-ink);
+    font-size: clamp(1.35rem, 2.6vw, 1.7rem);
+    font-weight: 650;
+    letter-spacing: -0.025em;
+}
+
+.mh-sg-theme-lila a.mh-sg-author:hover,
+.mh-sg-theme-lila a.mh-sg-author:focus-visible {
+    color: var(--mh-sg-accent);
+    text-decoration-color: var(--mh-sg-accent-light);
+}
+
+.mh-sg-theme-lila .mh-sg-role {
+    color: var(--mh-sg-kicker);
+    font-weight: 500;
+}
+
+.mh-sg-theme-lila .mh-sg-bio {
+    color: var(--mh-sg-muted);
+    line-height: 1.8;
+}
+
+/* Bilgi kutuları: beyaz kart + sol lila şerit (ana sayfa grup kartları) */
+.mh-sg-theme-lila .mh-sg-info-box {
+    border: 1px solid var(--mh-sg-line);
+    border-left: 3px solid var(--mh-sg-accent-light);
+    border-radius: 12px;
+    background: #FFFFFF;
+}
+
+.mh-sg-theme-lila .mh-sg-info-title {
+    color: var(--mh-sg-kicker);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.mh-sg-theme-lila .mh-sg-info-text {
+    color: var(--mh-sg-ink);
+    font-weight: 600;
+}
+
+.mh-sg-theme-lila .mh-sg-footer {
+    border-top-color: var(--mh-sg-line);
+}
+
+/* Butonlar: düz, gölgesiz, 8px köşe — ana sayfadaki İletişim / Yazılarımız */
+.mh-sg-theme-lila .mh-sg-action,
+.mh-sg-theme-lila .mh-sg-action:visited {
+    min-height: 46px;
+    padding: 12px 19px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: none;
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.mh-sg-theme-lila .mh-sg-action.is-primary,
+.mh-sg-theme-lila .mh-sg-action.is-primary:visited {
+    border-color: var(--mh-sg-accent);
+    color: #FFFFFF !important;
+    background: var(--mh-sg-accent);
+    box-shadow: none;
+}
+
+.mh-sg-theme-lila .mh-sg-action.is-primary:hover,
+.mh-sg-theme-lila .mh-sg-action.is-primary:focus-visible {
+    border-color: var(--mh-sg-ink);
+    color: #FFFFFF !important;
+    background: var(--mh-sg-ink);
+    box-shadow: none;
+}
+
+.mh-sg-theme-lila .mh-sg-action.is-secondary,
+.mh-sg-theme-lila .mh-sg-action.is-secondary:visited {
+    border-color: var(--mh-sg-line-strong);
+    color: var(--mh-sg-accent) !important;
+    background: var(--mh-sg-surface);
+}
+
+.mh-sg-theme-lila .mh-sg-action.is-secondary:hover,
+.mh-sg-theme-lila .mh-sg-action.is-secondary:focus-visible {
+    border-color: var(--mh-sg-accent-light);
+    color: var(--mh-sg-ink) !important;
+    background: var(--mh-sg-surface-strong);
+}
+
+.mh-sg-theme-lila .mh-sg-action:hover,
+.mh-sg-theme-lila .mh-sg-action:focus-visible,
+.mh-sg-theme-lila .mh-sg-share-link:hover,
+.mh-sg-theme-lila .mh-sg-share-link:focus-visible {
+    transform: none;
+}
+
+.mh-sg-theme-lila .mh-sg-action.is-clicked {
+    animation: none;
+}
+
+.mh-sg-theme-lila .mh-sg-action:focus-visible,
+.mh-sg-theme-lila .mh-sg-share-link:focus-visible,
+.mh-sg-theme-lila a.mh-sg-author:focus-visible {
+    outline-color: var(--mh-sg-kicker);
+}
+
+/* Paylaşım */
+.mh-sg-theme-lila .mh-sg-share-link,
+.mh-sg-theme-lila .mh-sg-share-link:visited {
+    border-color: var(--mh-sg-line-strong);
+    border-radius: 8px;
+    color: var(--mh-sg-accent) !important;
+    background: var(--mh-sg-surface);
+}
+
+.mh-sg-theme-lila .mh-sg-share-link:hover,
+.mh-sg-theme-lila .mh-sg-share-link:focus-visible {
+    border-color: var(--mh-sg-accent);
+    color: #FFFFFF !important;
+    background: var(--mh-sg-accent);
+}
+
+.mh-sg-theme-lila .mh-sg-share-label {
+    color: var(--mh-sg-muted);
+    font-weight: 500;
+}
+
+.mh-sg-theme-lila .mh-sg-copy-status {
+    color: var(--mh-sg-accent);
+}
+
+/* Yasal uyarı */
+.mh-sg-theme-lila .mh-sg-disclaimer {
+    padding: 12px 14px;
+    border-radius: 8px;
+    color: var(--mh-sg-muted);
+    background: var(--mh-sg-surface);
+}
+
+.mh-sg-theme-lila .mh-sg-footer + .mh-sg-disclaimer {
+    margin-top: 0;
+}
+
+.mh-sg-theme-lila .mh-sg-disclaimer .mh-sg-icon {
+    color: var(--mh-sg-kicker);
+}
+
+@media (max-width: 640px) {
+    .mh-sg-theme-lila .mh-sg-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 11px;
+    }
+
+    .mh-sg-theme-lila .mh-sg-avatar img,
+    .mh-sg-theme-lila .mh-sg-initials {
+        border-radius: 7px;
+    }
 }
 
 /* ==========================================================================
