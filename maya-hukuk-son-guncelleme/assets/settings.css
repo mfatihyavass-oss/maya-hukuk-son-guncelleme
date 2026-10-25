@@ -392,3 +392,10 @@
         padding: 16px;
     }
 }
+
+.mh-sg-color-field .mh-sg-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}

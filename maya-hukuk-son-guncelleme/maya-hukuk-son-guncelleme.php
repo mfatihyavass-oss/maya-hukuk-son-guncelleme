@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Güncelleme Bloku
  * Description:       Gutenberg için dinamik yazar ve son güncelleme kartı: yazar fotoğrafı, unvan, bio, tarih rozetleri, okuma süresi, butonlar, bilgi kutuları, paylaşım, yasal uyarı, otomatik ekleme ve güncellik raporları.
- * Version:           2.0.0
+ * Version:           2.1.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Maya Hukuk
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Maya_Hukuk_Son_Guncelleme {
-    const VERSION = '2.0.0';
+    const VERSION = '2.1.0';
     const BLOCK_NAME = 'maya-hukuk/son-guncelleme';
     const SHORTCODE = 'maya_son_guncelleme';
     const DASHBOARD_NONCE_ACTION = 'mh_sg_dashboard_date_audit';
@@ -39,6 +39,8 @@ final class Maya_Hukuk_Son_Guncelleme {
     const OPTION_GRADIENT_START = 'mh_sg_gradient_start';
     const OPTION_GRADIENT_END = 'mh_sg_gradient_end';
     const OPTION_ACCENT_COLOR = 'mh_sg_accent_color';
+    const OPTION_BUTTON_TEXT_COLOR = 'mh_sg_button_text_color';
+    const OPTION_BUTTON2_TEXT_COLOR = 'mh_sg_button2_text_color';
     const OPTION_AUTO_INSERT = 'mh_sg_auto_insert';
     const OPTION_STALE_MONTHS = 'mh_sg_stale_months';
 
@@ -160,6 +162,8 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_GRADIENT_START,
             self::OPTION_GRADIENT_END,
             self::OPTION_ACCENT_COLOR,
+            self::OPTION_BUTTON_TEXT_COLOR,
+            self::OPTION_BUTTON2_TEXT_COLOR,
             self::OPTION_AUTO_INSERT,
             self::OPTION_STALE_MONTHS,
         );
@@ -334,6 +338,17 @@ final class Maya_Hukuk_Son_Guncelleme {
             $s['gradient_end'],
             $s['accent_color']
         );
+
+        // Buton yazı renkleri boşsa tema kendi rengini kullanır.
+        if ($s['button_text_color'] !== '') {
+            $classes[] = 'has-button-text-color';
+            $styles .= '--mh-sg-c-button-text:' . $s['button_text_color'] . ';';
+        }
+
+        if ($s['button2_text_color'] !== '') {
+            $classes[] = 'has-button2-text-color';
+            $styles .= '--mh-sg-c-button2-text:' . $s['button2_text_color'] . ';';
+        }
 
         if ($options['use_wrapper']) {
             $wrapper_attributes = get_block_wrapper_attributes(array(
@@ -670,6 +685,8 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_GRADIENT_START => array('string', 'sanitize_gradient_start_color', self::DEFAULT_GRADIENT_START),
             self::OPTION_GRADIENT_END => array('string', 'sanitize_gradient_end_color', self::DEFAULT_GRADIENT_END),
             self::OPTION_ACCENT_COLOR => array('string', 'sanitize_accent_color', self::DEFAULT_ACCENT_COLOR),
+            self::OPTION_BUTTON_TEXT_COLOR => array('string', 'sanitize_optional_color', ''),
+            self::OPTION_BUTTON2_TEXT_COLOR => array('string', 'sanitize_optional_color', ''),
             self::OPTION_AUTO_INSERT => array('array', 'sanitize_auto_insert', array()),
             self::OPTION_STALE_MONTHS => array('integer', 'sanitize_stale_months', self::DEFAULT_STALE_MONTHS),
         );
@@ -715,6 +732,8 @@ final class Maya_Hukuk_Son_Guncelleme {
             'gradient_start' => $this->sanitize_gradient_start_color($read(self::OPTION_GRADIENT_START, self::DEFAULT_GRADIENT_START)),
             'gradient_end' => $this->sanitize_gradient_end_color($read(self::OPTION_GRADIENT_END, self::DEFAULT_GRADIENT_END)),
             'accent_color' => $this->sanitize_accent_color($read(self::OPTION_ACCENT_COLOR, self::DEFAULT_ACCENT_COLOR)),
+            'button_text_color' => $this->sanitize_optional_color($read(self::OPTION_BUTTON_TEXT_COLOR, '')),
+            'button2_text_color' => $this->sanitize_optional_color($read(self::OPTION_BUTTON2_TEXT_COLOR, '')),
             'auto_insert' => $this->sanitize_auto_insert($read(self::OPTION_AUTO_INSERT, array())),
             'stale_months' => $this->sanitize_stale_months($read(self::OPTION_STALE_MONTHS, self::DEFAULT_STALE_MONTHS)),
         );
@@ -855,6 +874,24 @@ final class Maya_Hukuk_Son_Guncelleme {
 
     public function sanitize_accent_color($color) {
         return $this->sanitize_color_with_default($color, self::DEFAULT_ACCENT_COLOR);
+    }
+
+    /**
+     * Optional color: the form sends array('custom' => '1', 'color' => '#hex').
+     * Without the "custom" checkbox the theme color is used and '' is stored.
+     */
+    public function sanitize_optional_color($value) {
+        if (is_array($value)) {
+            if (empty($value['custom']) || !isset($value['color']) || !is_string($value['color'])) {
+                return '';
+            }
+
+            $value = $value['color'];
+        }
+
+        $sanitized = is_string($value) ? sanitize_hex_color($value) : '';
+
+        return $sanitized ? strtoupper($sanitized) : '';
     }
 
     private function sanitize_color_with_default($color, $default_color) {
@@ -1078,6 +1115,11 @@ final class Maya_Hukuk_Son_Guncelleme {
                         <h2>Butonlar</h2>
                         <p class="description">İlk buton vurgulu, diğerleri ikincil görünür. <code>tel:</code>, <code>mailto:</code>, WhatsApp ve Google Haritalar bağlantılarına otomatik simge eklenir.</p>
                         <?php $this->render_repeater(self::OPTION_ACTION_BUTTONS, $s['action_buttons'], 'render_action_button_setting_row', 'Buton ekle'); ?>
+                        <div class="mh-sg-field-grid is-colors">
+                            <?php $this->render_optional_color_field(self::OPTION_BUTTON_TEXT_COLOR, 'İlk buton yazı rengi', $s['button_text_color'], '#FFFFFF'); ?>
+                            <?php $this->render_optional_color_field(self::OPTION_BUTTON2_TEXT_COLOR, 'Diğer butonların yazı rengi', $s['button2_text_color'], $s['accent_color']); ?>
+                        </div>
+                        <p class="description">İşaretlemezseniz yazı rengi seçili temaya göre otomatik belirlenir (Lila temada ilk buton beyaz, diğerleri vurgu rengi).</p>
                     </section>
 
                     <section class="mh-sg-card">
@@ -1231,6 +1273,21 @@ final class Maya_Hukuk_Son_Guncelleme {
             <?php if ($description !== '') : ?>
                 <p class="description"><?php echo esc_html($description); ?></p>
             <?php endif; ?>
+        </div>
+        <?php
+    }
+
+    private function render_optional_color_field($option_name, $label, $value, $fallback) {
+        $is_custom = $value !== '';
+        $id = $option_name . '_color';
+        ?>
+        <div class="mh-sg-field mh-sg-color-field">
+            <label class="mh-sg-label" for="<?php echo esc_attr($id); ?>"><?php echo esc_html($label); ?></label>
+            <input type="color" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($option_name); ?>[color]" value="<?php echo esc_attr($is_custom ? $value : $fallback); ?>" />
+            <label class="mh-sg-checkbox">
+                <input type="checkbox" name="<?php echo esc_attr($option_name); ?>[custom]" value="1" <?php checked($is_custom); ?> data-mh-sg-custom-color />
+                <span>Özel renk kullan</span>
+            </label>
         </div>
         <?php
     }

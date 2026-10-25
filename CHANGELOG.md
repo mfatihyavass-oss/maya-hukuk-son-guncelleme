@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.1.0 - 2026-10-25
+
+- Ayarlar > Butonlar bolumune `Ilk buton yazi rengi` ve `Diger butonlarin yazi rengi` secenekleri eklendi.
+- `Ozel renk kullan` isaretlenmezse renk temaya gore otomatik belirlenir; renk secildiginde kutu kendiliginden isaretlenir ve canli onizleme guncellenir.
+- Secilen renkler tum temalarda ve fare ustune gelindiginde de korunur.
+- Kaldirmada yeni ayarlar da temizlenir.
+
 ## 2.0.0 - 2026-10-25
 
 ### Yeni tasarım

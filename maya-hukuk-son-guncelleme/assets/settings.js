@@ -210,6 +210,16 @@
             schedulePreview();
         }
 
+        // Özel buton rengi seçilince "Özel renk kullan" kutusunu otomatik işaretle.
+        form.addEventListener('input', function (event) {
+            var field = event.target.closest('.mh-sg-color-field');
+            var toggle = field && event.target.type === 'color' ? field.querySelector('[data-mh-sg-custom-color]') : null;
+
+            if (toggle) {
+                toggle.checked = true;
+            }
+        });
+
         form.addEventListener('input', schedulePreview);
         form.addEventListener('change', schedulePreview);
 

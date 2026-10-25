@@ -25,6 +25,8 @@ $mh_sg_options = array(
     'mh_sg_gradient_start',
     'mh_sg_gradient_end',
     'mh_sg_accent_color',
+    'mh_sg_button_text_color',
+    'mh_sg_button2_text_color',
     'mh_sg_auto_insert',
     'mh_sg_stale_months',
 );

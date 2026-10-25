@@ -977,3 +977,21 @@ a.mh-sg-author:focus-visible {
         display: none !important;
     }
 }
+
+/* ==========================================================================
+   Ayarlardan seçilen buton yazı renkleri (tüm temalarda temanın önüne geçer)
+   ========================================================================== */
+
+.mh-sg-block.has-button-text-color .mh-sg-action.is-primary,
+.mh-sg-block.has-button-text-color .mh-sg-action.is-primary:visited,
+.mh-sg-block.has-button-text-color .mh-sg-action.is-primary:hover,
+.mh-sg-block.has-button-text-color .mh-sg-action.is-primary:focus-visible {
+    color: var(--mh-sg-c-button-text) !important;
+}
+
+.mh-sg-block.has-button2-text-color .mh-sg-action.is-secondary,
+.mh-sg-block.has-button2-text-color .mh-sg-action.is-secondary:visited,
+.mh-sg-block.has-button2-text-color .mh-sg-action.is-secondary:hover,
+.mh-sg-block.has-button2-text-color .mh-sg-action.is-secondary:focus-visible {
+    color: var(--mh-sg-c-button2-text) !important;
+}
