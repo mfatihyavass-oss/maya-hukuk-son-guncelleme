@@ -1116,3 +1116,89 @@ a.mh-sg-author:focus-visible {
 .mh-sg-block.has-c-button2-bg .mh-sg-action.is-secondary:focus-visible {
     filter: brightness(0.96);
 }
+
+/* ==========================================================================
+   Fotoğraf görünümü (Ayarlar > Yazar > Fotoğraf görünümü)
+   ========================================================================== */
+
+.mh-sg-block.mh-sg-avatar-box .mh-sg-avatar {
+    width: 84px;
+    height: 84px;
+    padding: 4px;
+    border: 1px solid var(--mh-sg-line);
+    border-radius: 13px;
+    background: var(--mh-sg-surface-strong);
+    box-shadow: none;
+}
+
+.mh-sg-block.mh-sg-avatar-box .mh-sg-avatar img,
+.mh-sg-block.mh-sg-avatar-box .mh-sg-initials {
+    border: 0;
+    border-radius: 9px;
+}
+
+.mh-sg-block.mh-sg-avatar-plain .mh-sg-avatar {
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    box-shadow: none;
+}
+
+.mh-sg-block.mh-sg-avatar-plain .mh-sg-avatar img,
+.mh-sg-block.mh-sg-avatar-plain .mh-sg-initials {
+    border: 0;
+    border-radius: 12px;
+}
+
+.mh-sg-block.mh-sg-avatar-circle .mh-sg-avatar {
+    width: 80px;
+    height: 80px;
+    padding: 3px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--mh-sg-accent-light);
+    box-shadow: none;
+}
+
+.mh-sg-block.mh-sg-avatar-circle .mh-sg-avatar img,
+.mh-sg-block.mh-sg-avatar-circle .mh-sg-initials {
+    border: 3px solid var(--mh-sg-gradient-start);
+    border-radius: 50%;
+}
+
+@media (max-width: 640px) {
+    .mh-sg-block.mh-sg-avatar-box .mh-sg-avatar,
+    .mh-sg-block.mh-sg-avatar-plain .mh-sg-avatar,
+    .mh-sg-block.mh-sg-avatar-circle .mh-sg-avatar {
+        width: 68px;
+        height: 68px;
+    }
+}
+
+/* Başlık metni, gövde metni ve fotoğraf kutusu renkleri */
+
+.mh-sg-block.has-c-heading .mh-sg-eyebrow,
+.mh-sg-block.has-c-heading .mh-sg-role,
+.mh-sg-block.has-c-heading .mh-sg-info-title {
+    color: var(--mh-sg-c-heading) !important;
+}
+
+.mh-sg-block.has-c-heading .mh-sg-eyebrow::before {
+    background: var(--mh-sg-c-heading) !important;
+}
+
+.mh-sg-block.has-c-body .mh-sg-share-label {
+    color: var(--mh-sg-c-body) !important;
+}
+
+.mh-sg-block.has-c-avatar-frame .mh-sg-avatar {
+    border-color: var(--mh-sg-c-avatar-frame) !important;
+    background: var(--mh-sg-c-avatar-frame) !important;
+}
+
+.mh-sg-block.has-c-box-title .mh-sg-info-title {
+    color: var(--mh-sg-c-box-title) !important;
+}

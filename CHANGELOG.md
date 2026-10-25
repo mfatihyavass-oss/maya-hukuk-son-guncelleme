@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.0 - 2026-10-25
+
+- Ayarlar > Yazar bolumune `Fotograf gorunumu` eklendi: `Temaya gore` (varsayilan), `Kutu icinde` (ana sayfadaki portre gibi lila cerceve), `Cercevesiz`, `Yuvarlak`.
+- Kart ve kutu renklerine `Baslik metni` (Yazar etiketi, unvan ve kutu basliklari) ve `Fotograf kutusu` eklendi; `Bio ve yasal uyari metni` rengi `Govde metni` olarak adlandirildi ve Paylas etiketini de kapsar.
+- `Kutu basligi` rengi secilirse `Baslik metni` rengine gore onceliklidir.
+
 ## 2.3.0 - 2026-10-25
 
 - Lila ve diger temalarda kutu ve kart renkleri secilemiyordu (eski metin/gradyan ayarlari yalnizca Lacivert temada calisiyordu).

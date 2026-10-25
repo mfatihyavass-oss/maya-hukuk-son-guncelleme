@@ -4,7 +4,7 @@ Tags: gutenberg, block, update, date, hukuk
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.3.0
+Stable tag: 2.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,11 @@ Evet. Ayarlar ekraninda buton veya bilgi kutusu satirlarini silebilir ya da bos 
 Evet. Eklenti tamamen kaldirildiginda kayitli ayarlar temizlenir.
 
 == Changelog ==
+
+= 2.4.0 =
+
+- `Fotograf gorunumu` ayari: Temaya gore, Kutu icinde, Cercevesiz, Yuvarlak.
+- Yeni renkler: Baslik metni (Yazar etiketi, unvan, kutu basliklari), Govde metni ve Fotograf kutusu.
 
 = 2.3.0 =
 

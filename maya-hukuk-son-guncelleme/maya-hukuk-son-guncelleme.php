@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Maya Hukuk Son Güncelleme Bloku
  * Description:       Gutenberg için dinamik yazar ve son güncelleme kartı: yazar fotoğrafı, unvan, bio, tarih rozetleri, okuma süresi, butonlar, bilgi kutuları, paylaşım, yasal uyarı, otomatik ekleme ve güncellik raporları.
- * Version:           2.3.0
+ * Version:           2.4.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Maya Hukuk
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Maya_Hukuk_Son_Guncelleme {
-    const VERSION = '2.3.0';
+    const VERSION = '2.4.0';
     const BLOCK_NAME = 'maya-hukuk/son-guncelleme';
     const SHORTCODE = 'maya_son_guncelleme';
     const DASHBOARD_NONCE_ACTION = 'mh_sg_dashboard_date_audit';
@@ -35,6 +35,7 @@ final class Maya_Hukuk_Son_Guncelleme {
     const OPTION_THEME = 'mh_sg_theme';
     const OPTION_DATE_STYLE = 'mh_sg_date_style';
     const OPTION_WIDTH = 'mh_sg_width';
+    const OPTION_AVATAR_STYLE = 'mh_sg_avatar_style';
     const OPTION_FEATURES = 'mh_sg_features';
     const OPTION_TEXT_COLOR = 'mh_sg_text_color';
     const OPTION_GRADIENT_START = 'mh_sg_gradient_start';
@@ -56,6 +57,14 @@ final class Maya_Hukuk_Son_Guncelleme {
     const DEFAULT_ACCENT_COLOR = '#5B3A91';
     const DEFAULT_THEME = 'lila';
     const DEFAULT_WIDTH = 'wide';
+    const DEFAULT_AVATAR_STYLE = 'theme';
+
+    const AVATAR_STYLES = array(
+        'theme' => 'Temaya göre',
+        'box' => 'Kutu içinde',
+        'plain' => 'Çerçevesiz',
+        'circle' => 'Yuvarlak',
+    );
 
     /**
      * Optional colors that work in every theme. Empty value = theme color.
@@ -65,7 +74,9 @@ final class Maya_Hukuk_Son_Guncelleme {
         'card-bg' => array('mh_sg_card_bg_color', 'Kart zemini', '#FCFAFF'),
         'card-border' => array('mh_sg_card_border_color', 'Kart çerçevesi', '#E8DFF2'),
         'name' => array('mh_sg_name_color', 'Yazar adı', '#3F286E'),
-        'body' => array('mh_sg_body_color', 'Bio ve yasal uyarı metni', '#655D70'),
+        'heading' => array('mh_sg_heading_color', 'Başlık metni (Yazar etiketi, unvan, kutu başlıkları)', '#795B9D'),
+        'body' => array('mh_sg_body_color', 'Gövde metni (bio, yasal uyarı)', '#655D70'),
+        'avatar-frame' => array('mh_sg_avatar_frame_color', 'Fotoğraf kutusu', '#ECE2F4'),
         'badge-bg' => array('mh_sg_badge_bg_color', 'Tarih rozeti zemini', '#ECE2F4'),
         'badge-text' => array('mh_sg_badge_text_color', 'Tarih rozeti yazısı', '#5B3A91'),
         'box-bg' => array('mh_sg_box_bg_color', 'Kutu zemini', '#FFFFFF'),
@@ -192,6 +203,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_THEME,
             self::OPTION_DATE_STYLE,
             self::OPTION_WIDTH,
+            self::OPTION_AVATAR_STYLE,
             self::OPTION_FEATURES,
             self::OPTION_TEXT_COLOR,
             self::OPTION_GRADIENT_START,
@@ -362,6 +374,10 @@ final class Maya_Hukuk_Son_Guncelleme {
         // Blokta "geniş/tam genişlik" hizalaması seçildiyse genel genişlik ayarı devreye girmez.
         if ($options['align'] === '') {
             $classes[] = 'mh-sg-width-' . $s['width'];
+        }
+
+        if ($s['avatar_style'] !== 'theme') {
+            $classes[] = 'mh-sg-avatar-' . $s['avatar_style'];
         }
 
         if ($show['avatar']) {
@@ -730,6 +746,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             self::OPTION_THEME => array('string', 'sanitize_theme', self::DEFAULT_THEME),
             self::OPTION_DATE_STYLE => array('string', 'sanitize_date_style', 'long'),
             self::OPTION_WIDTH => array('string', 'sanitize_width', self::DEFAULT_WIDTH),
+            self::OPTION_AVATAR_STYLE => array('string', 'sanitize_avatar_style', self::DEFAULT_AVATAR_STYLE),
             self::OPTION_FEATURES => array('array', 'sanitize_features', self::DEFAULT_FEATURES),
             self::OPTION_TEXT_COLOR => array('string', 'sanitize_text_color', self::DEFAULT_TEXT_COLOR),
             self::OPTION_GRADIENT_START => array('string', 'sanitize_gradient_start_color', self::DEFAULT_GRADIENT_START),
@@ -789,6 +806,7 @@ final class Maya_Hukuk_Son_Guncelleme {
             'theme' => $this->sanitize_theme($read(self::OPTION_THEME, self::DEFAULT_THEME)),
             'date_style' => $this->sanitize_date_style($read(self::OPTION_DATE_STYLE, 'long')),
             'width' => $this->sanitize_width($read(self::OPTION_WIDTH, self::DEFAULT_WIDTH)),
+            'avatar_style' => $this->sanitize_avatar_style($read(self::OPTION_AVATAR_STYLE, self::DEFAULT_AVATAR_STYLE)),
             'features' => $this->sanitize_features($read(self::OPTION_FEATURES, self::DEFAULT_FEATURES)),
             'text_color' => $this->sanitize_text_color($read(self::OPTION_TEXT_COLOR, self::DEFAULT_TEXT_COLOR)),
             'gradient_start' => $this->sanitize_gradient_start_color($read(self::OPTION_GRADIENT_START, self::DEFAULT_GRADIENT_START)),
@@ -892,6 +910,10 @@ final class Maya_Hukuk_Son_Guncelleme {
 
     public function sanitize_theme($value) {
         return is_string($value) && isset(self::THEMES[$value]) ? $value : self::DEFAULT_THEME;
+    }
+
+    public function sanitize_avatar_style($value) {
+        return is_string($value) && isset(self::AVATAR_STYLES[$value]) ? $value : self::DEFAULT_AVATAR_STYLE;
     }
 
     public function sanitize_width($value) {
@@ -1168,6 +1190,20 @@ final class Maya_Hukuk_Son_Guncelleme {
                                 <button type="button" class="button-link button-link-delete" data-mh-sg-avatar-remove<?php echo $s['avatar_id'] ? '' : ' hidden'; ?>>Kaldır</button>
                             </div>
                             <p class="description">Fotoğraf seçilmezse ad ve soyadın baş harflerinden oluşan bir rozet gösterilir.</p>
+                        </div>
+
+                        <div class="mh-sg-field">
+                            <span class="mh-sg-label">Fotoğraf görünümü</span>
+                            <div class="mh-sg-avatar-style-choices">
+                                <?php foreach (self::AVATAR_STYLES as $style_key => $style_label) : ?>
+                                    <label class="mh-sg-avatar-style-choice is-<?php echo esc_attr($style_key); ?>">
+                                        <input type="radio" name="<?php echo esc_attr(self::OPTION_AVATAR_STYLE); ?>" value="<?php echo esc_attr($style_key); ?>" <?php checked($s['avatar_style'], $style_key); ?> />
+                                        <span class="mh-sg-avatar-style-swatch" aria-hidden="true"></span>
+                                        <span><?php echo esc_html($style_label); ?></span>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                            <p class="description">"Kutu içinde" fotoğrafı ana sayfanızdaki portre gibi lila bir çerçeveye yerleştirir. Çerçeve rengini "Kart ve kutu renkleri" bölümünden değiştirebilirsiniz.</p>
                         </div>
 
                         <div class="mh-sg-field">
